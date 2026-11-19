@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="ru" data-th="gr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a0c10">
+<title>Железный дневник</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============ THEME SYSTEM ============ */
+:root{
+  --g-chest:#ff4d4f; --g-back:#3f8cff; --g-legs:#ffc53d; --g-sh:#3ddc84; --g-arms:#ff5cb8; --g-abs:#22d3ee; --g-none:#8b93a3;
+  --ok:#3ddc84; --warn:#ffc53d; --bad:#ff4d4f; --info:#3f8cff;
+  --r:18px; --r-s:12px; --tab-h:64px; --head-h:56px;
+  --f-d:'Unbounded',system-ui,sans-serif; --f-b:'Manrope',system-ui,sans-serif; --f-m:'JetBrains Mono',ui-monospace,monospace;
+  --ease:cubic-bezier(.22,.9,.26,1); --spring:cubic-bezier(.34,1.56,.44,1);
+}
+html[data-th="gr"]{ --bg:#0a0c10; --bg2:#0e1117; --sur:#141821; --sur2:#1a2029; --line:#242c38; --line2:#2f3948;
+  --tx:#eef2f7; --tx2:#9aa5b5; --tx3:#5f6b7d; --acc:#c9f24b; --acc2:#ff6b5e; --acc-ink:#10140a; --glow:rgba(201,242,75,.16); --scrim:rgba(4,6,10,.72); --amb1:#1c2a12; --amb2:#101a2c; }
+html[data-th="ne"]{ --bg:#06070c; --bg2:#0a0c14; --sur:#10131f; --sur2:#161a2b; --line:#232a44; --line2:#2f3860;
+  --tx:#eaf6ff; --tx2:#8fa3c8; --tx3:#5a6a92; --acc:#22d3ee; --acc2:#e879f9; --acc-ink:#03151a; --glow:rgba(34,211,238,.2); --scrim:rgba(3,4,10,.78); --amb1:#0b2436; --amb2:#2a0f38; }
+html[data-th="pp"]{ --bg:#f2f1ec; --bg2:#e9e8e1; --sur:#ffffff; --sur2:#f6f5f0; --line:#e0ded4; --line2:#cfccc0;
+  --tx:#191b1f; --tx2:#5f6570; --tx3:#9aa0ab; --acc:#2563eb; --acc2:#f97316; --acc-ink:#ffffff; --glow:rgba(37,99,235,.12); --scrim:rgba(20,22,28,.45); --amb1:#dfe7ff; --amb2:#ffe9d6; }
+html[data-th="gd"]{ --bg:#0e0e12; --bg2:#131318; --sur:#191920; --sur2:#20202a; --line:#2c2c38; --line2:#3a3a4a;
+  --tx:#f3efe6; --tx2:#a8a294; --tx3:#6e6a5e; --acc:#e3b458; --acc2:#8fd0ff; --acc-ink:#1c1405; --glow:rgba(227,180,88,.16); --scrim:rgba(6,6,10,.75); --amb1:#2b2210; --amb2:#101c2a; }
+html[data-th="fr"]{ --bg:#0c0906; --bg2:#120e09; --sur:#1a140d; --sur2:#221a11; --line:#332619; --line2:#443222;
+  --tx:#fff3e6; --tx2:#c0a68c; --tx3:#7d6a55; --acc:#ff7a1a; --acc2:#ffd23d; --acc-ink:#211002; --glow:rgba(255,122,26,.18); --scrim:rgba(8,5,2,.75); --amb1:#33170a; --amb2:#2a2005; }
+html[data-th="cu"]{ --bg:#0a0b0f; --bg2:#0e1015; --sur:#14161d; --sur2:#1a1d26; --line:#262a36; --line2:#333848;
+  --tx:#f0f3f8; --tx2:#9aa3b5; --tx3:#606a7d; --acc:var(--cu-a,#00ffff); --acc2:var(--cu-i,#ff0000); --acc-ink:#0a0b0f; --glow:color-mix(in srgb,var(--cu-a,#00ffff) 16%,transparent); --scrim:rgba(4,5,9,.75); --amb1:#0a2226; --amb2:#260a0e; }
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scrollbar-width:thin;scrollbar-color:var(--line2) transparent}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:8px;border:2px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:var(--acc)}
+body{font-family:var(--f-b);background:var(--bg);color:var(--tx);font-size:15px;line-height:1.45;min-height:100dvh;overflow-x:hidden;transition:background .4s,color .4s}
+button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer;font-size:inherit}
+input,textarea,select{font-family:inherit;font-size:16px;color:var(--tx);background:var(--sur2);border:1px solid var(--line);border-radius:var(--r-s);padding:10px 12px;outline:none;width:100%;transition:border-color .2s,box-shadow .2s}
+input:focus,textarea:focus,select:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--glow)}
+input::placeholder,textarea::placeholder{color:var(--tx3)}
+textarea{resize:vertical;min-height:70px}
+svg.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+b,strong{font-weight:800}
+.mono{font-family:var(--f-m);font-variant-numeric:tabular-nums}
+
+/* ambient */
+#amb{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+#amb::before,#amb::after{content:"";position:absolute;width:60vmax;height:60vmax;border-radius:50%;filter:blur(90px);opacity:.5;transition:background 1s}
+#amb::before{background:radial-gradient(circle,var(--amb1),transparent 65%);top:-25vmax;left:-15vmax;animation:drift1 26s ease-in-out infinite alternate}
+#amb::after{background:radial-gradient(circle,var(--amb2),transparent 65%);bottom:-28vmax;right:-18vmax;animation:drift2 32s ease-in-out infinite alternate}
+@keyframes drift1{to{transform:translate(9vmax,7vmax) scale(1.12)}}
+@keyframes drift2{to{transform:translate(-8vmax,-6vmax) scale(1.08)}}
+#grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+
+#app{position:relative;z-index:2;max-width:620px;margin:0 auto;min-height:100dvh;padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom) + 96px)}
+@media(min-width:760px){#app{border-inline:1px solid var(--line);box-shadow:0 0 80px rgba(0,0,0,.35);background:color-mix(in srgb,var(--bg) 82%,transparent)}}
+
+/* header */
+#head{position:sticky;top:0;z-index:40;height:calc(var(--head-h) + env(safe-area-inset-top));padding-top:env(safe-area-inset-top);display:flex;align-items:center;gap:10px;padding-inline:16px;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+#head .logo{font-family:var(--f-d);font-weight:900;font-size:15px;letter-spacing:.04em;display:flex;align-items:center;gap:9px}
+#head .logo .ic{width:22px;height:22px;color:var(--acc)}
+#head .logo em{font-style:normal;color:var(--acc)}
+#head .sp{flex:1}
+.hbtn{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--sur);border:1px solid var(--line);transition:transform .15s var(--spring),border-color .2s}
+.hbtn:active{transform:scale(.9)}
+#cloud-dot{width:9px;height:9px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);transition:.3s}
+#cloud-dot.saving{background:var(--warn);box-shadow:0 0 8px var(--warn);animation:pulse 1s infinite}
+#cloud-dot.err{background:var(--bad);box-shadow:0 0 8px var(--bad)}
+#cloud-dot.off{background:var(--tx3);box-shadow:none}
+@keyframes pulse{50%{opacity:.4}}
+
+/* panels + entrance */
+#view{padding:16px 14px 8px}
+.panel>*{animation:rise .34s var(--ease) both;animation-delay:calc(var(--i,0)*38ms)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.panel.leave{animation:fadeout .13s ease both}
+@keyframes fadeout{to{opacity:0;transform:translateY(-6px)}}
+html.noanim *,html.noanim *::before,html.noanim *::after{animation-duration:.001s!important;transition-duration:.001s!important}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}}
+
+/* cards */
+.card{background:var(--sur);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px;position:relative;transition:border-color .25s,background .4s}
+.card.glow{border-color:color-mix(in srgb,var(--acc) 40%,var(--line));box-shadow:0 0 24px var(--glow)}
+.card h3{font-family:var(--f-d);font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--tx2);display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.card h3 .ic{width:17px;height:17px;color:var(--acc)}
+.card h3 .sp{flex:1}
+.sub{color:var(--tx2);font-size:13px}
+.tiny{color:var(--tx3);font-size:12px}
+.row{display:flex;align-items:center;gap:10px}
+.sp{flex:1}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border-radius:14px;font-weight:800;font-size:14px;background:var(--acc);color:var(--acc-ink);transition:transform .16s var(--spring),filter .2s,box-shadow .2s;box-shadow:0 4px 18px var(--glow);min-height:46px}
+.btn:active{transform:scale(.95)}
+.btn.sec{background:var(--sur2);color:var(--tx);border:1px solid var(--line2);box-shadow:none}
+.btn.ghost{background:transparent;color:var(--tx2);border:1px dashed var(--line2);box-shadow:none;font-weight:600;min-height:40px;padding:9px 14px;font-size:13px}
+.btn.ghost:hover{color:var(--tx);border-color:var(--tx3)}
+.btn.danger{background:color-mix(in srgb,var(--bad) 16%,var(--sur2));color:var(--bad);border:1px solid color-mix(in srgb,var(--bad) 40%,transparent);box-shadow:none}
+.btn.wide{width:100%}
+.btn.sm{padding:8px 13px;min-height:38px;font-size:13px;border-radius:11px}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.ibtn{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:var(--sur2);border:1px solid var(--line);color:var(--tx2);transition:transform .15s var(--spring),color .2s,border-color .2s;flex:none}
+.ibtn:active{transform:scale(.88)}
+.ibtn:hover{color:var(--tx);border-color:var(--line2)}
+.ibtn .ic{width:17px;height:17px}
+.ibtn.on{color:var(--acc);border-color:var(--acc);background:var(--glow)}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{padding:8px 13px;border-radius:999px;background:var(--sur2);border:1px solid var(--line);font-size:13px;font-weight:700;color:var(--tx2);transition:all .18s var(--ease);min-height:36px;display:inline-flex;align-items:center;gap:6px}
+.chip:active{transform:scale(.93)}
+.chip.on{background:var(--acc);color:var(--acc-ink);border-color:var(--acc);box-shadow:0 2px 12px var(--glow)}
+.chip.mini{padding:5px 10px;font-size:12px;min-height:30px}
+.chip .x{opacity:.6;font-weight:800}
+.gchip{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.03em;padding:3px 9px;border-radius:999px;text-transform:uppercase}
+.gdot{width:8px;height:8px;border-radius:3px;flex:none}
+
+/* wellbeing scale */
+.scale{display:flex;gap:6px}
+.scale button{flex:1;height:44px;border-radius:12px;background:var(--sur2);border:1px solid var(--line);font-family:var(--f-m);font-weight:700;font-size:15px;color:var(--tx2);transition:all .18s var(--spring)}
+.scale button:active{transform:scale(.9)}
+.scale button.on{background:var(--acc);color:var(--acc-ink);border-color:var(--acc);transform:translateY(-2px);box-shadow:0 4px 14px var(--glow)}
+.wb-field{margin-bottom:14px}
+.wb-field .lbl{font-size:13px;font-weight:800;color:var(--tx2);margin-bottom:7px;display:flex;justify-content:space-between}
+.wb-field .lbl span{color:var(--tx3);font-weight:600;font-size:12px}
+.dc-tag{display:inline-flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--warn) 14%,var(--sur2));border:1px solid color-mix(in srgb,var(--warn) 45%,transparent);color:var(--warn);padding:5px 10px;border-radius:999px;font-size:12px;font-weight:800}
+.dc-tag .x{cursor:pointer;opacity:.7}
+input[type=range]{-webkit-appearance:none;appearance:none;height:34px;background:transparent;border:none;padding:0;box-shadow:none}
+input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:8px;background:linear-gradient(90deg,var(--ok),var(--warn),var(--bad))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--tx);border:3px solid var(--sur);margin-top:-8px;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+input[type=range]::-moz-range-track{height:8px;border-radius:8px;background:linear-gradient(90deg,var(--ok),var(--warn),var(--bad))}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--tx);border:3px solid var(--sur)}
+
+/* tabbar */
+#tabbar{position:fixed;bottom:0;left:0;right:0;margin:0 auto;max-width:620px;z-index:45;height:calc(var(--tab-h) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);display:flex;background:color-mix(in srgb,var(--bg2) 88%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid var(--line)}
+#tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--tx3);font-size:10px;font-weight:800;letter-spacing:.02em;position:relative;transition:color .25s}
+#tabbar button .ic{width:22px;height:22px;transition:transform .25s var(--spring)}
+#tabbar button.on{color:var(--acc)}
+#tabbar button.on .ic{transform:translateY(-2px) scale(1.08)}
+#tabbar button.on::before{content:"";position:absolute;top:0;width:26px;height:3px;border-radius:0 0 4px 4px;background:var(--acc);box-shadow:0 2px 10px var(--glow)}
+#tabbar button:active .ic{transform:scale(.85)}
+
+/* workout */
+.daynav{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.daynav .date{flex:1;text-align:center;font-family:var(--f-d);font-weight:700;font-size:14px}
+.daynav .date small{display:block;font-family:var(--f-b);font-weight:600;color:var(--tx3);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.excard{background:var(--sur);border:1px solid var(--line);border-radius:var(--r);margin-bottom:10px;overflow:hidden;transition:border-color .25s,box-shadow .25s}
+.excard.sel{border-color:var(--acc);box-shadow:0 0 0 2px var(--glow)}
+.exhead{display:flex;align-items:flex-start;gap:10px;padding:13px 14px 9px}
+.exhead .nm{font-weight:800;font-size:14.5px;line-height:1.3}
+.exhead .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px;align-items:center}
+.exhead .meta .tiny{font-size:11px}
+.ss-badge{font-family:var(--f-m);font-weight:800;font-size:11px;background:var(--acc);color:var(--acc-ink);border-radius:7px;padding:2px 7px;flex:none}
+.ss-rail{border-left:3px solid var(--acc);margin-left:6px;padding-left:8px;position:relative}
+.ss-rail .excard{border-color:color-mix(in srgb,var(--acc) 30%,var(--line))}
+.ss-head{display:flex;align-items:center;gap:8px;padding:6px 4px;font-size:12px;font-weight:800;color:var(--acc)}
+.setrow{display:flex;align-items:center;gap:7px;padding:7px 12px;border-top:1px solid var(--line)}
+.setrow .num{font-family:var(--f-m);font-weight:700;font-size:12px;color:var(--tx3);width:20px;text-align:center;flex:none}
+.setrow input{padding:8px 6px;text-align:center;font-family:var(--f-m);font-weight:700;font-size:15px;border-radius:10px}
+.setrow .w{flex:1.15}.setrow .r{flex:1}
+.setrow .times{color:var(--tx3);font-weight:800;flex:none}
+.setrow.done{background:color-mix(in srgb,var(--ok) 6%,transparent)}
+.setrow.done .val{font-family:var(--f-m);font-weight:800;font-size:15px;flex:1;text-align:center}
+.setrow.done .val small{color:var(--tx3);font-size:11px;font-weight:600}
+.setrow.flash{animation:rowflash .6s var(--ease)}
+@keyframes rowflash{0%{background:color-mix(in srgb,var(--ok) 30%,transparent)}100%{background:color-mix(in srgb,var(--ok) 6%,transparent)}}
+.setrow.pop .val{animation:numpop .4s var(--spring)}
+@keyframes numpop{0%{transform:scale(.7)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+.checkbtn{width:42px;height:42px;border-radius:12px;background:var(--sur2);border:1.5px solid var(--line2);display:grid;place-items:center;color:var(--tx3);transition:all .2s var(--spring);flex:none}
+.checkbtn:active{transform:scale(.85)}
+.checkbtn.done{background:var(--ok);border-color:var(--ok);color:#08210f}
+.checkbtn.done .ic{stroke-dasharray:24;stroke-dashoffset:0;animation:draw .35s var(--ease)}
+@keyframes draw{from{stroke-dashoffset:24}to{stroke-dashoffset:0}}
+.checkbtn .ic{width:19px;height:19px;stroke-width:2.6}
+.hint{padding:2px 14px 8px;font-size:11.5px;color:var(--tx3);font-family:var(--f-m)}
+.exfoot{display:flex;gap:6px;padding:9px 12px;border-top:1px solid var(--line);flex-wrap:wrap}
+.qchip{padding:7px 11px;border-radius:10px;background:var(--sur2);border:1px solid var(--line);font-family:var(--f-m);font-weight:700;font-size:12px;color:var(--tx2);transition:all .15s var(--spring)}
+.qchip:active{transform:scale(.9);color:var(--acc);border-color:var(--acc)}
+.rec-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:800;color:var(--gd,#e3b458);background:color-mix(in srgb,#e3b458 14%,transparent);border:1px solid color-mix(in srgb,#e3b458 45%,transparent);padding:2px 8px;border-radius:999px;animation:recpop .5s var(--spring)}
+@keyframes recpop{0%{transform:scale(0)}70%{transform:scale(1.2)}100%{transform:scale(1)}}
+.prog-ring{position:relative;width:52px;height:52px;flex:none}
+.prog-ring svg{transform:rotate(-90deg)}
+.prog-ring .pct{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--f-m);font-weight:800;font-size:12px}
+
+/* autocomplete */
+.acwrap{position:relative}
+.ac{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:60;background:var(--sur2);border:1px solid var(--line2);border-radius:14px;box-shadow:0 14px 40px rgba(0,0,0,.45);max-height:280px;overflow-y:auto;animation:rise .2s var(--ease)}
+.ac .grp{padding:7px 13px 3px;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3);display:flex;align-items:center;gap:6px}
+.ac button{display:flex;width:100%;text-align:left;padding:10px 13px;gap:9px;align-items:center;font-size:14px;font-weight:600;border-top:1px solid var(--line);transition:background .15s}
+.ac button:active{background:var(--glow)}
+.ac button .tiny{margin-left:auto}
+.ac .create{color:var(--acc);font-weight:800}
+.ac .fuzzy{color:var(--warn)}
+
+/* heatmap */
+.heat{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,13px);gap:3px;overflow-x:auto;padding-bottom:4px}
+.heat i{width:13px;height:13px;border-radius:4px;background:var(--sur2);border:1px solid var(--line);transition:transform .15s}
+.heat i:active{transform:scale(1.3)}
+.heat i.l1{background:color-mix(in srgb,var(--acc) 25%,var(--sur2));border-color:transparent}
+.heat i.l2{background:color-mix(in srgb,var(--acc) 50%,var(--sur2));border-color:transparent}
+.heat i.l3{background:color-mix(in srgb,var(--acc) 75%,var(--sur2));border-color:transparent}
+.heat i.l4{background:var(--acc);border-color:transparent;box-shadow:0 0 6px var(--glow)}
+.heat i.today{outline:2px solid var(--acc2);outline-offset:1px}
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.stat{background:var(--sur2);border:1px solid var(--line);border-radius:14px;padding:12px}
+.stat .v{font-family:var(--f-m);font-weight:800;font-size:22px;line-height:1.1}
+.stat .v small{font-size:12px;color:var(--tx3)}
+.stat .k{font-size:11px;font-weight:800;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
+.bar-row{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.bar-row .bl{width:86px;font-size:12px;font-weight:800;color:var(--tx2);flex:none;display:flex;align-items:center;gap:6px}
+.bar-row .track{flex:1;height:14px;background:var(--sur2);border-radius:7px;overflow:hidden;border:1px solid var(--line)}
+.bar-row .fill{height:100%;border-radius:7px;animation:grow .7s var(--ease) both;transform-origin:left}
+@keyframes grow{from{transform:scaleX(0)}}
+.bar-row .bv{width:44px;text-align:right;font-family:var(--f-m);font-weight:700;font-size:12px;color:var(--tx2);flex:none}
+.warnbox{display:flex;gap:9px;align-items:flex-start;background:color-mix(in srgb,var(--warn) 9%,var(--sur2));border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);border-radius:12px;padding:10px 12px;font-size:12.5px;font-weight:600;color:var(--tx2);margin-bottom:7px}
+.warnbox .ic{width:16px;height:16px;color:var(--warn);margin-top:1px}
+.warnbox.cool{background:color-mix(in srgb,var(--info) 9%,var(--sur2));border-color:color-mix(in srgb,var(--info) 35%,transparent)}
+.warnbox.cool .ic{color:var(--info)}
+
+/* library */
+.libgrp{border:1px solid var(--line);border-radius:var(--r);margin-bottom:10px;overflow:hidden;background:var(--sur)}
+.libgrp>button{width:100%;display:flex;align-items:center;gap:10px;padding:13px 14px;font-weight:800;font-size:14px}
+.libgrp>button .cnt{margin-left:auto;font-family:var(--f-m);font-size:12px;color:var(--tx3)}
+.libgrp>button .chev{transition:transform .25s var(--ease);color:var(--tx3)}
+.libgrp.open>button .chev{transform:rotate(90deg)}
+.libgrp .items{display:none;border-top:1px solid var(--line)}
+.libgrp.open .items{display:block;animation:rise .25s var(--ease)}
+.libitem{display:flex;align-items:center;gap:10px;padding:11px 14px;border-top:1px solid var(--line);width:100%;text-align:left;transition:background .15s}
+.libitem:first-child{border-top:none}
+.libitem:active{background:var(--sur2)}
+.libitem .nm{font-weight:700;font-size:13.5px}
+.libitem .tags{font-size:11px;color:var(--tx3);margin-top:2px}
+.libitem .chev{margin-left:auto;color:var(--tx3)}
+
+/* program */
+.progday{display:flex;align-items:center;gap:10px;background:var(--sur2);border:1px solid var(--line);border-radius:14px;padding:11px 13px;margin-bottom:8px;transition:border-color .2s}
+.progday.next{border-color:color-mix(in srgb,var(--acc) 45%,var(--line))}
+.progday .pn{font-weight:800;font-size:14px}
+.progday .pc{font-size:11.5px;color:var(--tx3);font-family:var(--f-m)}
+.progday .idx{font-family:var(--f-d);font-weight:900;font-size:13px;color:var(--tx3);width:22px;flex:none}
+.progday.next .idx{color:var(--acc)}
+.nexttag{font-size:9.5px;font-weight:800;letter-spacing:.08em;color:var(--acc);text-transform:uppercase}
+
+/* timer */
+#timerbar{position:fixed;bottom:calc(var(--tab-h) + env(safe-area-inset-bottom) + 8px);left:10px;right:10px;margin:0 auto;max-width:600px;z-index:44;background:var(--sur2);border:1px solid var(--line2);border-radius:18px;padding:10px 12px;display:none;align-items:center;gap:11px;box-shadow:0 12px 40px rgba(0,0,0,.5);animation:rise .3s var(--spring)}
+#timerbar.on{display:flex}
+#timerbar.end{border-color:var(--ok);box-shadow:0 0 24px color-mix(in srgb,var(--ok) 35%,transparent)}
+#timerbar .ring{width:48px;height:48px;position:relative;flex:none}
+#timerbar .ring svg{transform:rotate(-90deg)}
+#timerbar .tt{font-family:var(--f-m);font-weight:800;font-size:19px;line-height:1}
+#timerbar .tl{font-size:10.5px;color:var(--tx3);font-weight:700;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#timerbar.low .tt{color:var(--acc2);animation:pulse .5s infinite}
+
+/* sheets */
+#sheet-root{position:fixed;inset:0;z-index:80;display:none}
+#sheet-root.on{display:block}
+.scrim{position:absolute;inset:0;background:var(--scrim);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);animation:fadein .25s ease}
+@keyframes fadein{from{opacity:0}}
+.sheet{position:absolute;bottom:0;left:0;right:0;margin:0 auto;max-width:620px;max-height:86dvh;background:var(--sur);border:1px solid var(--line2);border-bottom:none;border-radius:22px 22px 0 0;padding:10px 18px calc(18px + env(safe-area-inset-bottom));overflow-y:auto;animation:sheetup .32s var(--spring);scrollbar-width:thin}
+@keyframes sheetup{from{transform:translateY(60%);opacity:.4}}
+.sheet .grab{width:42px;height:4px;border-radius:4px;background:var(--line2);margin:2px auto 14px}
+.sheet h2{font-family:var(--f-d);font-weight:700;font-size:16px;margin-bottom:4px;display:flex;align-items:center;gap:9px}
+.sheet h2 .ic{color:var(--acc);width:20px;height:20px}
+.sheet .desc{color:var(--tx2);font-size:13.5px;margin-bottom:14px}
+.sheet .actions{display:flex;gap:9px;margin-top:16px}
+.sheet .actions .btn{flex:1}
+.sheet label{display:block;font-size:12px;font-weight:800;color:var(--tx2);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.05em}
+.optlist button{display:flex;width:100%;align-items:center;gap:10px;text-align:left;padding:12px 13px;border:1px solid var(--line);border-radius:13px;margin-bottom:7px;background:var(--sur2);font-weight:700;font-size:14px;transition:border-color .2s,transform .15s}
+.optlist button:active{transform:scale(.98);border-color:var(--acc)}
+.optlist button .tiny{margin-left:auto}
+
+/* themes picker */
+.themegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.themecard{border:2px solid var(--line);border-radius:14px;padding:9px;background:var(--sur2);transition:all .2s var(--spring);text-align:left}
+.themecard:active{transform:scale(.94)}
+.themecard.on{border-color:var(--acc);box-shadow:0 0 16px var(--glow)}
+.themecard .prev{height:44px;border-radius:9px;margin-bottom:7px;position:relative;overflow:hidden}
+.themecard .prev i{position:absolute;border-radius:4px}
+.themecard .tn{font-size:11.5px;font-weight:800}
+
+/* toast */
+#toast-root{position:fixed;bottom:calc(var(--tab-h) + env(safe-area-inset-bottom) + 14px);left:14px;right:14px;margin:0 auto;max-width:560px;z-index:95;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{pointer-events:auto;background:var(--sur2);border:1px solid var(--line2);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:700;box-shadow:0 10px 34px rgba(0,0,0,.5);animation:toastin .3s var(--spring)}
+.toast.out{animation:toastout .25s ease both}
+@keyframes toastin{from{transform:translateY(24px);opacity:0}}
+@keyframes toastout{to{transform:translateY(14px);opacity:0}}
+.toast .ic{width:18px;height:18px;flex:none}
+.toast.ok .ic{color:var(--ok)}.toast.warn .ic{color:var(--warn)}.toast.err .ic{color:var(--bad)}.toast.rec .ic{color:#e3b458}
+.toast button{margin-left:auto;color:var(--acc);font-weight:800;font-size:13px;padding:6px 10px;border-radius:9px;background:var(--glow);flex:none}
+
+/* confetti */
+#confetti{position:fixed;inset:0;z-index:99;pointer-events:none;overflow:hidden}
+#confetti i{position:absolute;width:9px;height:9px;border-radius:2px;top:-12px;animation:fall var(--d) linear forwards}
+@keyframes fall{to{transform:translate(var(--dx),105vh) rotate(var(--rot));opacity:.1}}
+
+/* misc */
+.empty{text-align:center;padding:26px 14px;color:var(--tx3)}
+.empty .ic{width:44px;height:44px;margin-bottom:10px;color:var(--line2)}
+.empty p{font-size:13.5px;font-weight:600;max-width:260px;margin:0 auto}
+.divider{height:1px;background:var(--line);margin:14px 0}
+.mkbox{display:flex;gap:9px;align-items:flex-start;background:var(--sur2);border:1px solid var(--line);border-radius:13px;padding:10px 12px;margin-bottom:12px;font-size:13px}
+.mkbox .ic{width:16px;height:16px;color:var(--warn);flex:none;margin-top:2px}
+.mkbox.star{border-color:color-mix(in srgb,var(--warn) 45%,transparent)}
+.listrow{display:flex;align-items:center;gap:10px;padding:10px 2px;border-top:1px solid var(--line);font-size:13.5px}
+.listrow:first-child{border-top:none}
+.listrow .mono{font-weight:700}
+.switch{position:relative;width:48px;height:28px;border-radius:999px;background:var(--sur2);border:1px solid var(--line2);transition:.25s;flex:none}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--tx3);transition:.25s var(--spring)}
+.switch.on{background:var(--acc);border-color:var(--acc)}
+.switch.on::after{left:23px;background:var(--acc-ink)}
+.setrow-opt{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.setrow-opt:first-child{border-top:none}
+.setrow-opt .ol{flex:1}
+.setrow-opt .ol b{font-size:14px;display:block}
+.setrow-opt .ol span{font-size:12px;color:var(--tx3)}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239aa5b5' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px}
+input[type=color]{padding:3px;height:44px;width:64px;border-radius:11px;cursor:pointer}
+.chart{width:100%;height:auto;display:block}
+.chart text{font-family:var(--f-m);font-size:9px;fill:var(--tx3)}
+.skel{border-radius:var(--r);background:linear-gradient(100deg,var(--sur) 40%,var(--sur2) 50%,var(--sur) 60%);background-size:200% 100%;animation:shim 1.3s infinite;border:1px solid var(--line)}
+@keyframes shim{to{background-position:-200% 0}}
+#boot{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .4s}
+#boot.off{opacity:0;pointer-events:none}
+#boot .bl{font-family:var(--f-d);font-weight:900;font-size:19px;display:flex;gap:10px;align-items:center}
+#boot .bl .ic{width:28px;height:28px;color:var(--acc);animation:pulse 1.2s infinite}
+#boot .bs{color:var(--tx3);font-size:13px;font-weight:600}
+#boot .bar{width:180px;height:4px;border-radius:4px;background:var(--sur2);overflow:hidden}
+#boot .bar i{display:block;height:100%;width:40%;border-radius:4px;background:var(--acc);animation:load 1.1s var(--ease) infinite}
+@keyframes load{0%{transform:translateX(-100%)}100%{transform:translateX(280%)}}
+.banner{display:flex;gap:9px;align-items:center;background:color-mix(in srgb,var(--warn) 10%,var(--sur));border:1px solid color-mix(in srgb,var(--warn) 40%,transparent);border-radius:13px;padding:10px 13px;font-size:12.5px;font-weight:700;color:var(--tx2);margin-bottom:12px}
+.banner .ic{width:17px;height:17px;color:var(--warn);flex:none}
+.bigdate{font-family:var(--f-d);font-weight:900;font-size:21px;line-height:1.2}
+.flame{display:inline-flex;align-items:center;gap:5px;font-family:var(--f-m);font-weight:800;color:var(--acc2);font-size:14px}
+.flame .ic{width:17px;height:17px}
+textarea.code{font-family:var(--f-m);font-size:11px;min-height:130px;white-space:pre;overflow:auto}
+.fin-badge{display:inline-flex;align-items:center;gap:5px;color:var(--ok);font-weight:800;font-size:12px;background:color-mix(in srgb,var(--ok) 12%,transparent);border:1px solid color-mix(in srgb,var(--ok) 40%,transparent);padding:4px 10px;border-radius:999px}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-db" viewBox="0 0 24 24"><path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11M1.5 10.5v3M22.5 10.5v3"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5M5 9.5V21h14V9.5M9.5 21v-6h5v6"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6.5a2.5 2.5 0 0 0 0 5H20M8 7h8M8 11h5"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-5 3 3 5-7"/></symbol>
+<symbol id="i-lib" viewBox="0 0 24 24"><path d="M4 4h6v16H4zM10 8h6v12h-6zM16 5l4 .8L17.5 20 14 19.2"/></symbol>
+<symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M2.5 12h3M18.5 12h3M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5l5 5 10-11"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+<symbol id="i-left" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+<symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></symbol>
+<symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 10v4l2.5 2M9.5 2.5h5M12 2.5V6"/></symbol>
+<symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 22c4.4 0 7-2.8 7-6.7 0-3.3-2.2-5.4-3.8-7.3C13.7 6.2 13 4.5 13 2c-3.2 1.8-4.3 4.6-4 7-1-.4-1.8-1.2-2.2-2.5C5.4 8.2 5 10.6 5 12.5 5 19.2 7.6 22 12 22z"/></symbol>
+<symbol id="i-cup" viewBox="0 0 24 24"><path d="M7 4h10v6a5 5 0 0 1-10 0zM7 5H3.5v2A3.5 3.5 0 0 0 7 10.5M17 5h3.5v2A3.5 3.5 0 0 1 17 10.5M12 15v4M8 21h8M9 19h6"/></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19zM13.5 7.5l3 3"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6.5 7l1 13h9l1-13M10 11v5M14 11v5"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="M9.5 14.5l5-5M8 12l-2.5 2.5a3.5 3.5 0 0 0 5 5L13 17M16 12l2.5-2.5a3.5 3.5 0 0 0-5-5L11 7"/></symbol>
+<symbol id="i-swap" viewBox="0 0 24 24"><path d="M4 8h13l-3.5-3.5M20 16H7l3.5 3.5"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.7 5.7 6.3.8-4.6 4.3 1.2 6.2L12 17l-5.6 3 1.2-6.2L3 9.5l6.3-.8z"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4.5 4.5 0 0 1-.4-9A6 6 0 0 1 18.3 10 4 4 0 0 1 17.5 18z"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24"><path d="M12 21V9M7 14l5-5 5 5M4 4h16"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3L1.8 20.5h20.4zM12 9.5v5M12 17.6v.4"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.4"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5S3.5 15 3.5 8.8A4.6 4.6 0 0 1 12 6a4.6 4.6 0 0 1 8.5 2.8C20.5 15 12 20.5 12 20.5z"/></symbol>
+<symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L4.5 13.5H11L10 22l8.5-11.5H12z"/></symbol>
+<symbol id="i-note" viewBox="0 0 24 24"><path d="M5 3h14v18l-3.5-2.5L12 21l-3.5-2.5L5 21zM9 8h6M9 12h6"/></symbol>
+<symbol id="i-scale" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 7a5 5 0 0 1 4.5 2.8L14 12h-4L7.5 9.8A5 5 0 0 1 12 7zM12 12l1.5-2.5"/></symbol>
+<symbol id="i-undo" viewBox="0 0 24 24"><path d="M4 9h10a6 6 0 0 1 0 12h-4M4 9l4-4M4 9l4 4"/></symbol>
+<symbol id="i-arr-up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+<symbol id="i-arr-dn" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+</defs></svg>
+
+<div id="amb"></div><div id="grain"></div>
+<div id="boot"><div class="bl"><svg class="ic"><use href="#i-db"/></svg>ЖЕЛЕЗНЫЙ <em style="color:var(--acc);font-style:normal">ДНЕВНИК</em></div><div class="bar"><i></i></div><div class="bs" id="boot-status">Читаю облако Telegram…</div></div>
+
+<div id="app">
+  <header id="head">
+    <div class="logo"><svg class="ic"><use href="#i-db"/></svg>ЖЕЛЕЗНЫЙ <em>ДНЕВНИК</em></div>
+    <div class="sp"></div>
+    <button class="hbtn" data-act="cloud-info" title="Статус облака"><span id="cloud-dot"></span></button>
+    <button class="hbtn" data-act="theme-cycle" title="Сменить тему"><svg class="ic"><use href="#i-moon"/></svg></button>
+  </header>
+  <main id="view"></main>
+</div>
+
+<div id="timerbar"></div>
+<nav id="tabbar">
+  <button data-act="tab" data-tab="home" class="on"><svg class="ic"><use href="#i-home"/></svg>Сегодня</button>
+  <button data-act="tab" data-tab="diary"><svg class="ic"><use href="#i-book"/></svg>Дневник</button>
+  <button data-act="tab" data-tab="stats"><svg class="ic"><use href="#i-chart"/></svg>Прогресс</button>
+  <button data-act="tab" data-tab="lib"><svg class="ic"><use href="#i-lib"/></svg>База</button>
+  <button data-act="tab" data-tab="set"><svg class="ic"><use href="#i-gear"/></svg>Ещё</button>
+</nav>
+<div id="sheet-root"></div>
+<div id="toast-root"></div>
+<div id="confetti"></div>
+
+<script>
+"use strict";
+/* ================================================================
+   ЖЕЛЕЗНЫЙ ДНЕВНИК v6 — персональный тренажёрный дневник.
+   Данные: Telegram CloudStorage (тот же бот). Старые ключи НЕ удаляются.
+   Двойной буфер поколений + зеркало в localStorage + встроенная копия.
+================================================================ */
+
+/* ---------- ВСТРОЕННАЯ РЕЗЕРВНАЯ КОПИЯ (твой экспорт) ---------- */
+const EMBED = {"v":4,"lib":[{"n":"Строгий подъем","g":"Руки","t":"Бицепс","s":""},{"n":"Разгибания на квадрицепс","g":"Ноги","t":"Квадрицепс","s":""},{"n":"Жим ногами, прямой пост. ног","g":"Ноги","t":"","s":""},{"n":"Сгибания на бицепс бедра","g":"Ноги","t":"Бицепс бедра","s":""},{"n":"Махи в тренажере на ср. дельту (по 1 руке)","g":"Плечи","t":"Средняя дельта","s":""},{"n":"Махи со свободн. весом на ср. дельту (2 руками)","g":"Плечи","t":"Средняя дельта","s":""},{"n":"Немного изогнутый гриф на пер. дельту (2 руки)","g":"Плечи","t":"Передняя дельта","s":""},{"n":"Пэк-дэк на зад. дельту (По 1 руке)","g":"Плечи","t":"Задняя Дельта","s":""},{"n":"Молоточки на бицепс","g":"Руки","t":"Бицепс","s":""},{"n":"Вертикальная тяга на широчайшие","g":"Спина","t":"Широчайшие","s":"Бицепс"},{"n":"Горизонтальная тяга узким хватом","g":"Спина","t":"","s":""},{"n":"Рычажная тяга на широчайшие по 1 руке","g":"Спина","t":"Широчайшие","s":""},{"n":"Шраги на трапецию","g":"Спина","t":"Трапеция","s":""},{"n":"Подтягивания средним хватом","g":"Спина","t":"","s":""},{"n":"Жим лёжа с грифом","g":"Грудь","t":"Грудь","s":"Трицепс"},{"n":"Пэк-дэк на грудь","g":"Грудь","t":"","s":""},{"n":"Тренажер на низ груди","g":"Грудь","t":"","s":""},{"n":"Трицепс обратным хватом в блоке","g":"Руки","t":"Трицепс","s":""},{"n":"Треугольник на трицепс в блоке","g":"Руки","t":"Трицепс","s":""},{"n":"Бицепс в блоке металл. рукояткой","g":"Руки","t":"Бицепс","s":"Предплечье"},{"n":"Статика на бицепс по 1 руке","g":"Руки","t":"Бицепс","s":""},{"n":"Предплечья на лавке по 1 руке","g":"Руки","t":"Предплечья","s":""},{"n":"Обр. предплечья на лавке по 1 руке","g":"Руки","t":"Предплечья","s":""},{"n":"Пресс в тренажёре","g":"Пресс","t":"","s":""},{"n":"Косые в тренажере","g":"Пресс","t":"","s":""},{"n":"Строгий сидя","g":"Руки","t":"Бицепс","s":""},{"n":"Жим ногами, широкая пост. ног","g":"Ноги","t":"","s":""},{"n":"Икры в углу 2 ноги","g":"Ноги","t":"Икры","s":""},{"n":"Протяжка на ср. дельту","g":"Плечи","t":"Средняя Дельта","s":""},{"n":"Махи в тренажере на пер. дельту (по 1 руке)","g":"Плечи","t":"Передняя дельта","s":""},{"n":"Пэк-дэк на зад. дельту ( 2 руки)","g":"Плечи","t":"Задняя Дельта","s":""},{"n":"Рычажная тяга на широчайшие двумя руками","g":"Спина","t":"Широчайшие","s":""},{"n":"Косичка на трицепс в блоке","g":"Руки","t":"трицепс","s":""},{"n":"Статика на бицепс гантелей","g":"Руки","t":"Бицепс","s":""},{"n":"Тяга обр. хватом на широчайшие в блоке","g":"Спина","t":"Широчайшие","s":""},{"n":"Предплечья в рычажной","g":"Руки","t":"Предплечья","s":""},{"n":"Жим узким хватом","g":"Грудь","t":"","s":""},{"n":"Жим на плечи (пер.дельта)","g":"Плечи","t":"Передняя дельта","s":""},{"n":"Строгий в негативную фазу","g":"Руки","t":"Бицепс","s":""},{"n":"Интересное упражнение на строгий в блоке","g":"","t":"","s":""},{"n":"Пронаторы-супенаторы","g":"","t":"","s":""},{"n":"Преплечья с грифом","g":"","t":"","s":""},{"n":"Обр. предплечья с грифом","g":"","t":"","s":""}],"prog":[],"days":{"2026-10-10":[{"n":"Строгий подъем","s":[[32.5,3],[40,1],[40,1],[40,1]]},{"n":"Разгибания на квадрицепс","s":[[21,15],[21,15],[21,15]]},{"n":"Жим ногами, прямой пост. ног","s":[[40,8],[50,8],[60,8],[70,8]]},{"n":"Сгибания на бицепс бедра","s":[[52,8],[66,8],[66,8],[72,8]]},{"n":"Махи в тренажере на ср. дельту (по 1 руке)","s":[[2.5,16],[2.5,16],[2.5,16],[2.5,16]]},{"n":"Махи со свободн. весом на ср. дельту (2 руками)","s":[[7,8],[7,8],[8,8],[8,8]]},{"n":"Немного изогнутый гриф на пер. дельту (2 руки)","s":[[10,12],[10,12],[10,12],[10,12]]},{"n":"Пэк-дэк на зад. дельту (По 1 руке)","s":[[27,16],[27,16],[27,16],[27,16]]}],"2026-10-13":[{"n":"Строгий подъем","s":[[27.5,6],[27.5,6],[27.5,6],[27.5,6]]},{"n":"Молоточки на бицепс","s":[[12,8],[12,8],[12,8],[12,8]]},{"n":"Вертикальная тяга на широчайшие","s":[[57,8],[57,8],[57,8],[57,8]]},{"n":"Горизонтальная тяга узким хватом","s":[[45,8],[50,8],[50,8],[50,8]]},{"n":"Рычажная тяга на широчайшие по 1 руке","s":[[24,8],[24,8],[28,8],[28,8]]},{"n":"Шраги на трапецию","s":[[20,8],[20,8],[20,8],[20,8]]},{"n":"Подтягивания средним хватом","s":[[58,8],[58,8],[58,8],[58,8]]}],"2026-10-15":[{"n":"Строгий подъем","s":[[32.5,4],[32.5,4],[32.5,4],[32.5,4]]},{"n":"Жим лёжа с грифом","s":[[15,15],[40,8],[50,5],[50,5],[50,5]]},{"n":"Пэк-дэк на грудь","s":[[21,8],[21,8],[21,6],[21,6]]},{"n":"Тренажер на низ груди","s":[[10,8],[15,8],[15,8],[15,8]]},{"n":"Трицепс обратным хватом в блоке","s":[[39,8],[45,8],[45,8],[45,8]]},{"n":"Треугольник на трицепс в блоке","s":[[45,8],[51,8],[57,8],[60,8],[66,6]]},{"n":"Бицепс в блоке металл. рукояткой","s":[[33,8],[39,8],[45,8],[48,8],[54,8],[57,6]]}],"2026-10-17":[{"n":"Строгий подъем","s":[[25,3],[37.5,3],[37.5,3],[37.5,3],[42,1],[45,1],[45,1]]},{"n":"Треугольник на трицепс в блоке","s":[[27,16],[27,16],[27,16],[27,16]]},{"n":"Статика на бицепс по 1 руке","s":[[39,1],[45,1],[45,1]]},{"n":"Предплечья на лавке по 1 руке","s":[[12,8],[12,8],[12,8],[12,8]]},{"n":"Обр. предплечья на лавке по 1 руке","s":[[7,8],[7,8],[7,8],[7,8]]},{"n":"Пресс в тренажёре","s":[[10,12],[10,12],[10,12],[10,12]]},{"n":"Косые в тренажере","s":[[5,8],[5,8],[5,8],[5,8]]}],"2026-10-20":[{"n":"Строгий подъем","s":[[27.5,5],[27.5,5],[27.5,5],[27.5,5],[27.5,5]]},{"n":"Строгий сидя","s":[[30,6],[30,6],[30,6],[30,6]]},{"n":"Жим ногами, широкая пост. ног","s":[[50,8],[50,8],[50,8],[50,8]]},{"n":"Сгибания на бицепс бедра","s":[[66,8],[66,8],[66,8],[66,8]]},{"n":"Икры в углу 2 ноги","s":[[12,12],[12,12],[12,12],[12,12]]},{"n":"Махи в тренажере на ср. дельту (по 1 руке)","s":[[1.25,12],[1.25,12],[1.25,12],[1.25,12]]},{"n":"Протяжка на ср. дельту","s":[[10,12],[10,12],[10,12],[10,12]]},{"n":"Махи в тренажере на пер. дельту (по 1 руке)","s":[[2.5,12],[2.5,12],[2.5,12],[2.5,12]]},{"n":"Пэк-дэк на зад. дельту ( 2 руки)","s":[[27,12],[27,12],[27,12],[27,12]]}],"2026-10-22":[{"n":"Строгий подъем","s":[[30,5],[30,5],[30,5]]},{"n":"Строгий сидя","s":[[30,7],[30,7],[30,7],[30,7]]},{"n":"Рычажная тяга на широчайшие двумя руками","s":[[25,8],[50,8],[75,8],[90,8],[90,8]]},{"n":"Вертикальная тяга на широчайшие","s":[[45,8],[52,8],[57,8],[57,8]]},{"n":"Подтягивания средним хватом","s":[[58,8],[58,7],[58,7],[58,7]]},{"n":"Предплечья на лавке по 1 руке","s":[[12,6],[12,6],[12,6],[12,6]]},{"n":"Обр. предплечья на лавке по 1 руке","s":[[7,6],[7,6],[7,6],[7,6]]},{"n":"Пресс в тренажёре","s":[[10,12],[12.5,12],[12.5,12],[12.5,12],[10,12]]},{"n":"Косые в тренажере","s":[[5,10],[7.5,8],[7.5,8],[7.5,8]]}],"2026-10-24":[{"n":"Строгий подъем","s":[[32.5,5],[32.5,5],[32.5,5],[32.5,5],[32.5,5]]},{"n":"Косичка на трицепс в блоке","s":[[33,12],[33,12],[33,12],[27,12]]},{"n":"Треугольник на трицепс в блоке","s":[[45,12],[51,12],[51,12],[51,12]]},{"n":"Жим лёжа с грифом","s":[[50,5],[50,5],[50,5]]},{"n":"Предплечья на лавке по 1 руке","s":[[12,8],[12,8],[12,8],[12,8]]},{"n":"Обр. предплечья на лавке по 1 руке","s":[[7,8],[7,8],[7,8],[7,8]]}],"2026-10-27":[{"n":"Строгий подъем","s":[[22.5,7],[22.5,7],[22.5,7],[22.5,7],[22.5,7]]},{"n":"Строгий сидя","s":[[30,8],[30,8],[30,8],[30,8]]},{"n":"Статика на бицепс гантелей","s":[[8,10],[10,10],[10,10],[10,10]]},{"n":"Треугольник на трицепс в блоке","s":[[45,12],[45,12],[45,12],[45,12]]},{"n":"Предплечья на лавке по 1 руке","s":[[8,12],[8,12],[8,12],[8,12]]},{"n":"Обр. предплечья на лавке по 1 руке","s":[[6,10],[6,10],[6,10],[6,10]]}],"2026-10-31":[{"n":"Строгий подъем","s":[[25,3],[35,1],[42.5,1],[45,1]]},{"n":"Тяга обр. хватом на широчайшие в блоке","s":[[33,8],[45,8],[57,8],[62,8]]},{"n":"Предплечья в рычажной","s":[[20,8],[40,12],[45,12],[45,12]]}],"2026-11-03":[{"n":"Строгий подъем","s":[[30,3],[30,3],[30,3],[30,3],[30,3]]},{"n":"Жим узким хватом","s":[[40,8],[35,12],[35,12],[35,12]]},{"n":"Пэк-дэк на грудь","s":[[15,12],[15,12],[15,12],[15,12]]},{"n":"Жим на плечи (пер.дельта)","s":[[20,12],[20,12],[20,12],[20,12]]},{"n":"Предплечья на лавке по 1 руке","s":[[7,12],[7,12],[7,12],[7,12]]},{"n":"Обр. предплечья на лавке по 1 руке","s":[[4,12],[4,12],[4,12],[4,12]]}],"2026-11-10":[{"n":"Строгий подъем","s":[[30,5],[35,3],[35,3],[35,3],[35,3]]},{"n":"Строгий в негативную фазу","s":[[47.5,5],[47.5,5],[47.5,5]]},{"n":"Вертикальная тяга на широчайшие","s":[[45,8],[45,8],[45,8],[45,8]]}],"2026-11-12":[{"n":"Молоточки на бицепс","s":[[14,6],[14,6],[14,6],[14,6]]},{"n":"Строгий в негативную фазу","s":[[50,3],[50,3],[50,3]]},{"n":"Интересное упражнение на строгий в блоке","s":[[21,4],[21,4],[21,4],[21,4]]},{"n":"Преплечья с грифом","s":[[20,8],[20,8],[20,8],[20,8]]},{"n":"Обр. предплечья на лавке по 1 руке","s":[[7,6],[7,6],[7,6],[7,6]]}],"2026-11-14":[{"n":"Строгий подъем","s":[[20,6],[37.5,2],[37.5,2],[37.5,2],[37.5,2]]},{"n":"Пронаторы-супенаторы","s":[[6,8],[8,8],[10,8],[10,8]]},{"n":"Молоточки на бицепс","s":[[14,8],[14,7],[12,8],[12,6]]},{"n":"Преплечья с грифом","s":[[20,8],[25,8],[27.5,8],[30,8]]},{"n":"Обр. предплечья на лавке по 1 руке","s":[[7,8],[7,8],[7,8],[7,8]]}],"2026-11-17":[{"n":"Строгий подъем","s":[[20,6],[30,3],[40,1],[40,1]]},{"n":"Строгий в негативную фазу","s":[[50,1],[50,1],[50,1]]},{"n":"Молоточки на бицепс","s":[[17,1],[17,1],[17,1]]},{"n":"Шраги на трапецию","s":[[22,6],[24,6],[27,6],[22,15],[22,15],[22,15]]},{"n":"Вертикальная тяга на широчайшие","s":[[45,6],[57,6],[61,6],[45,15],[45,15],[45,15]]},{"n":"Пресс в тренажёре","s":[[15,12],[15,12],[15,12],[15,8]]}]},"bw":{"2026-10-10":56.8,"2026-10-15":57.2,"2026-10-17":56,"2026-10-24":56.2,"2026-10-28":56.4,"2026-10-30":55.8,"2026-11-17":57.5},"mk":{"2026-10-10":{"i":1,"t":"тяжелая"},"2026-10-13":{"t":"легкая"},"2026-10-15":{"t":"Последние два упр. были в отказ, кайфффф"},"2026-10-17":{"t":"47 кг уже в кармане"},"2026-10-22":{"t":"углей побольше надо, 150 малооо"},"2026-10-31":{"i":1,"t":"сильно расстроился из за 47"},"2026-11-08":{"i":0,"t":"Соревнования"},"2026-11-07":{"i":1}},"cfg":{"th":"d","tb":[30,60,90,120,180,300],"mig":1,"i":"#ff0000","a":"#00ffff","nx":0}};
+
+/* ---------- КОНСТАНТЫ ---------- */
+const NS='gx6';                       // новый namespace ключей. Старые не трогаем НИКОГДА.
+const CHUNK=3400;                     // лимит значения CloudStorage 4096 — берём с запасом
+const SECTIONS=['lib','prog','days','bw','mk','wb','fin','rh','arc','cfg'];
+const GC={'Грудь':'--g-chest','Спина':'--g-back','Ноги':'--g-legs','Плечи':'--g-sh','Руки':'--g-arms','Пресс':'--g-abs'};
+const GORDER=['Грудь','Спина','Ноги','Плечи','Руки','Пресс'];
+const THEMES=[{id:'gr',n:'Графит',bg:'#0a0c10',s:'#1a2029',a:'#c9f24b',b:'#ff6b5e'},{id:'ne',n:'Неон',bg:'#06070c',s:'#161a2b',a:'#22d3ee',b:'#e879f9'},{id:'pp',n:'Бумага',bg:'#f2f1ec',s:'#ffffff',a:'#2563eb',b:'#f97316'},{id:'gd',n:'Премиум',bg:'#0e0e12',s:'#20202a',a:'#e3b458',b:'#8fd0ff'},{id:'fr',n:'Огонь',bg:'#0c0906',s:'#221a11',a:'#ff7a1a',b:'#ffd23d'},{id:'cu',n:'Своя',bg:'#0a0b0f',s:'#1a1d26',a:'#00ffff',b:'#ff0000'}];
+const PARTS=['Шея','Плечо Л','Плечо П','Локоть Л','Локоть П','Запястье Л','Запястье П','Поясница','Грудь','Колено Л','Колено П','Бедро','Икра','Другое'];
+const RETS=[['never','Никогда'],[7,'1 неделя'],[14,'2 недели'],[30,'1 месяц'],[60,'2 месяца'],[90,'3 месяца'],[180,'Полгода'],[365,'1 год']];
+const PERIODS=[['w',7,'Неделя'],['m',30,'Месяц'],['3m',90,'3 мес'],['6m',180,'Полгода'],['y',365,'Год'],['all',99999,'Всё']];
+const TPL4=[{name:'Руки',ex:[]},{name:'Ноги + плечи',ex:[]},{name:'Спина + бицепс',ex:[]},{name:'Грудь + трицепс',ex:[]}];
+const TPL3=[{name:'Грудь + трицепс',ex:[]},{name:'Спина + бицепс',ex:[]},{name:'Ноги + плечи',ex:[]}];
+const ARC_CAP=200, RH_CAP=400;
+
+/* ---------- УТИЛИТЫ ---------- */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=s=>String(s||'').toLowerCase().replace(/ё/g,'е').replace(/\s+/g,' ').trim();
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const uid=()=>Math.random().toString(36).slice(2,9);
+const num=v=>{const n=parseFloat(String(v).replace(',','.'));return isFinite(n)?n:0};
+const fmtKg=v=>{const n=Math.round(v*100)/100;return String(n).replace('.',',')};
+const fmtTon=v=>v>=1000?(Math.round(v/100)/10)+' т':Math.round(v)+' кг';
+const plural=(n,a,b,c)=>{n=Math.abs(n)%100;const d=n%10;if(n>10&&n<20)return c;if(d>1&&d<5)return b;if(d===1)return a;return c};
+function dkey(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function pdate(k){const[a,b,c]=k.split('-').map(Number);return new Date(a,b-1,c)}
+function today(){return dkey(new Date())}
+function shiftDay(k,n){const d=pdate(k);d.setDate(d.getDate()+n);return dkey(d)}
+function daysAgo(n){const d=new Date();d.setDate(d.getDate()-n);return dkey(d)}
+const MONTHS=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+const WD=['вс','пн','вт','ср','чт','пт','сб'];
+function fdate(k){const d=pdate(k);return d.getDate()+' '+MONTHS[d.getMonth()]}
+function fdateFull(k){const d=pdate(k);return WD[d.getDay()]+', '+d.getDate()+' '+MONTHS[d.getMonth()]+' '+d.getFullYear()}
+function lev(a,b){if(a===b)return 0;const m=a.length,n=b.length;if(!m)return n;if(!n)return m;if(Math.abs(m-n)>3)return 9;let prev=Array.from({length:n+1},(_,i)=>i);for(let i=1;i<=m;i++){const cur=[i];for(let j=1;j<=n;j++)cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));prev=cur}return prev[n]}
+function cssVar(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+function gcolor(g){return GC[g]?cssVar(GC[g]):cssVar('--g-none')}
+function gchip(g){const c=gcolor(g||'');return `<span class="gchip" style="color:${c};background:color-mix(in srgb,${c} 13%,transparent);border:1px solid color-mix(in srgb,${c} 38%,transparent)"><span class="gdot" style="background:${c}"></span>${esc(g||'Без группы')}</span>`}
+function debounce(fn,ms){let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms)}}
+
+/* ---------- TELEGRAM ---------- */
+const TG=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
+const CS=TG&&TG.CloudStorage?TG.CloudStorage:null;
+function tgInit(){if(!TG)return;try{TG.ready();TG.expand();if(TG.disableVerticalSwipes)TG.disableVerticalSwipes();}catch(e){}
+  const setVh=()=>{try{document.documentElement.style.setProperty('--tg-vh',(TG.viewportStableHeight||window.innerHeight)+'px')}catch(e){}};
+  setVh();try{TG.onEvent('viewportChanged',setVh)}catch(e){}}
+function tgColors(){if(!TG)return;try{const bg=cssVar('--bg');if(TG.setHeaderColor)TG.setHeaderColor(bg);if(TG.setBackgroundColor)TG.setBackgroundColor(bg);}catch(e){}}
+function vib(kind){if(!S.cfg.vib)return;try{if(TG&&TG.HapticFeedback){if(kind==='ok')TG.HapticFeedback.notificationOccurred('success');else if(kind==='warn')TG.HapticFeedback.notificationOccurred('warning');else if(kind==='err')TG.HapticFeedback.notificationOccurred('error');else if(kind==='sel')TG.HapticFeedback.selectionChanged();else TG.HapticFeedback.impactOccurred(kind||'light');}}catch(e){}
+  try{if(navigator.vibrate){if(kind==='ok')navigator.vibrate([25,40,25]);else if(kind==='end')navigator.vibrate([140,90,140]);else navigator.vibrate(12)}}catch(e){}}
+function csCall(method,args,ms){return new Promise((res,rej)=>{if(!CS)return rej(new Error('no-cloud'));let done=false;const t=setTimeout(()=>{if(!done){done=true;rej(new Error('timeout'))}},ms||9000);
+  try{CS[method](...args,(err,val)=>{if(done)return;done=true;clearTimeout(t);err?rej(new Error(String(err))):res(val)})}catch(e){if(!done){done=true;clearTimeout(t);rej(e)}}})}
+const csGet=k=>csCall('getItem',[k]).then(v=>v===''?null:v);
+const csGetMany=ks=>csCall('getItems',[ks],15000);
+const csSet=(k,v)=>csCall('setItem',[k,v]);
+const csKeys=()=>csCall('getKeys',[],12000);
+const csDel=k=>csCall('removeItem',[k]);
+
+/* ---------- СОСТОЯНИЕ ---------- */
+let S={v:6,lib:[],prog:[],days:{},bw:{},mk:{},wb:{},fin:{},rh:[],arc:{},cfg:{th:'gr',tb:[30,60,90,120,180,300,420],rest:90,autoTimer:1,anim:1,vib:1,ret:'never',nx:0,i:'#ff0000',a:'#00ffff',sp:'m',seeded:0}};
+let UI={tab:'home',diaryDate:today(),diaryAuto:1,ssMode:false,ssSel:[],libOpen:{},libQ:'',statEx:null,cloud:'off',lastSave:0,legacyKeys:0,bootMsg:'',undo:null,acCtx:null};
+let saveTimer=null,saving=false,dirty=false;
+
+function libBy(n){const q=norm(n);return S.lib.find(e=>norm(e.n)===q)}
+function groups(){const set=new Set(S.lib.map(e=>e.g).filter(Boolean));const arr=[...set];arr.sort((a,b)=>{const ia=GORDER.indexOf(a),ib=GORDER.indexOf(b);return(ia<0?99:ia)-(ib<0?99:ib)||a.localeCompare(b,'ru')});return arr}
+function bestOf(n,excl){const q=norm(n);let best=0,bd=null,br=0;for(const d in S.days){for(let i=0;i<S.days[d].length;i++){const e=S.days[d][i];if(norm(e.n)!==q)continue;for(let j=0;j<e.s.length;j++){if(excl&&excl.d===d&&excl.i===i&&excl.j===j)continue;const[w,r]=e.s[j];if(r>=1&&w>best){best=w;bd=d;br=r}}}}return{w:best,d:bd,r:br}}
+function allBests(){const m={};for(const d in S.days)for(const e of S.days[d]){const q=norm(e.n);for(const[w,r]of e.s){if(r>=1&&w>(m[q]?.w||0))m[q]={w,d,r,n:e.n}}}return m}
+function rebuildRH(){const best={},out=[];const dates=Object.keys(S.days).sort();for(const d of dates)for(const e of S.days[d]){const q=norm(e.n);for(const[w,r]of e.s){if(r<1)continue;if(w>(best[q]||0)){if(best[q])out.push({n:e.n,w,r,d});best[q]=w}}}S.rh=out.slice(-RH_CAP)}
+function sessionsOf(n){const q=norm(n);return Object.keys(S.days).filter(d=>S.days[d].some(e=>norm(e.n)===q)).sort()}
+function lastSession(n,before){const q=norm(n);const ds=Object.keys(S.days).filter(d=>d<before&&S.days[d].some(e=>norm(e.n)===q)).sort();if(!ds.length)return null;const d=ds[ds.length-1];return{d,ex:S.days[d].find(e=>norm(e.n)===q)}}
+function tonnage(d){let t=0;for(const e of(S.days[d]||[]))for(const[w,r]of e.s)t+=w*r;return t}
+function setsCount(d){return(S.days[d]||[]).reduce((a,e)=>a+e.s.length,0)}
+function weekStreak(){const weeks=new Set();for(const d in S.days){if(!S.days[d].length)continue;const dt=pdate(d);const day=(dt.getDay()+6)%7;dt.setDate(dt.getDate()-day);weeks.add(dkey(dt))}
+  let cur=new Date();const day=(cur.getDay()+6)%7;cur.setDate(cur.getDate()-day);let k=dkey(cur);if(!weeks.has(k))k=shiftDay(k,-7);let n=0;while(weeks.has(k)){n++;k=shiftDay(k,-7)}return n}
+function monthCount(){const p=today().slice(0,7);return Object.keys(S.days).filter(d=>d.startsWith(p)&&S.days[d].some(e=>e.s.length)).length}
+
+/* ---------- МИГРАЦИЯ / ЗАГРУЗКА ---------- */
+function looksSnapshot(o){return o&&typeof o==='object'&&!Array.isArray(o)&&(o.days||o.lib)&&(o.v||o.cfg||o.bw||o.mk)}
+function mergeInto(dst,src){if(!src)return;
+  if(Array.isArray(src.lib))for(const e of src.lib){if(!e||!e.n)continue;const ex=dst.lib.find(x=>norm(x.n)===norm(e.n));if(!ex)dst.lib.push({n:e.n,g:e.g||'',t:e.t||'',s:e.s||'',rest:e.rest||0});else{ex.g=ex.g||e.g||'';ex.t=ex.t||e.t||'';ex.s=(typeof ex.s==='string'&&ex.s)?ex.s:(e.s||'');ex.rest=ex.rest||e.rest||0}}
+  if(Array.isArray(src.prog)&&src.prog.length&&!dst.prog.length)dst.prog=src.prog.map(p=>({name:p.name||p.n||'День',ex:(p.ex||p.e||[]).filter(x=>typeof x==='string')}));
+  for(const sec of['days','bw','mk','wb','fin','arc']){const s=src[sec];if(!s||typeof s!=='object')continue;for(const k in s){if(!(k in dst[sec]))dst[sec][k]=s[k];else if(sec==='days'){const a=dst.days[k],b=s[k];if(Array.isArray(b)&&Array.isArray(a)){const sa=a.reduce((x,e)=>x+(e.s?.length||0),0),sb=b.reduce((x,e)=>x+(e.s?.length||0),0);if(sb>sa)dst.days[k]=b}}}}
+  if(Array.isArray(src.rh)&&src.rh.length>dst.rh.length)dst.rh=src.rh.slice(-RH_CAP);
+  if(src.cfg&&typeof src.cfg==='object'){const c=src.cfg;if(!dst.cfg._fromCloud){dst.cfg.th=c.th||dst.cfg.th;dst.cfg.i=c.i||dst.cfg.i;dst.cfg.a=c.a||dst.cfg.a;dst.cfg.nx=c.nx||0;if(Array.isArray(c.tb)&&c.tb.length)dst.cfg.tb=[...new Set([...c.tb,420])].sort((a,b)=>a-b);dst.cfg._fromCloud=1}}}
+function normalizeState(){
+  const thMap={d:'gr',n:'ne',m:'pp',gr:'gr',ne:'ne',pp:'pp',gd:'gd',fr:'fr',cu:'cu'};S.cfg.th=thMap[S.cfg.th]||'gr';
+  if(!Array.isArray(S.cfg.tb)||!S.cfg.tb.length)S.cfg.tb=[30,60,90,120,180,300,420];
+  S.cfg.tb=[...new Set(S.cfg.tb.map(Number).filter(x=>x>=5&&x<=3600))].sort((a,b)=>a-b);
+  S.cfg.rest=Number(S.cfg.rest)||90;S.cfg.ret=S.cfg.ret??'never';S.cfg.sp=S.cfg.sp||'m';
+  for(const k of['anim','vib','autoTimer'])S.cfg[k]=S.cfg[k]===0?0:1;
+  delete S.cfg._fromCloud;
+  for(const d in S.days){S.days[d]=(S.days[d]||[]).filter(e=>e&&e.n).map(e=>({n:e.n,s:(e.s||[]).filter(x=>Array.isArray(x)).map(x=>[num(x[0]),Math.round(num(x[1]))]),...(e.ss?{ss:e.ss}:{})}))}
+  if(!S.prog.length){S.prog=JSON.parse(JSON.stringify(TPL4));S.cfg.nx=0}
+  S.prog=S.prog.slice(0,7);S.cfg.nx=clamp(S.cfg.nx||0,0,S.prog.length-1);
+  for(const e of S.lib){e.rest=Number(e.rest)||0}
+  S.rh=(S.rh||[]).slice(-RH_CAP);
+}
+async function loadNewFormat(){
+  const metaRaw=await csGet(NS+'_meta');if(!metaRaw)return null;let meta;try{meta=JSON.parse(metaRaw)}catch(e){return null}
+  for(const gen of[meta.gen,1-meta.gen]){
+    try{const keys=[];for(const sec in meta.parts){const cnt=(gen===meta.gen?meta.parts[sec]:(meta.prevParts||{})[sec])||0;for(let i=0;i<cnt;i++)keys.push(`${NS}_${gen}_${sec}_${i}`)}
+      if(!keys.length)continue;const map=await csGetMany(keys);const out={v:6,lib:[],prog:[],days:{},bw:{},mk:{},wb:{},fin:{},rh:[],arc:{},cfg:{...S.cfg}};
+      for(const sec in meta.parts){const cnt=(gen===meta.gen?meta.parts[sec]:(meta.prevParts||{})[sec])||0;let str='';for(let i=0;i<cnt;i++)str+=map[`${NS}_${gen}_${sec}_${i}`]||'';if(str)out[sec]=JSON.parse(str)}
+      out.cfg={...S.cfg,...out.cfg};return out}catch(e){}}
+  return null}
+async function scanLegacy(){
+  const keys=await csKeys();const old=keys.filter(k=>!k.startsWith(NS+'_'));UI.legacyKeys=old.length;
+  const found={v:6,lib:[],prog:[],days:{},bw:{},mk:{},wb:{},fin:{},rh:[],arc:{},cfg:{}};if(!old.length)return found;
+  const vals={};for(let i=0;i<old.length;i+=80){const batch=old.slice(i,i+80);try{Object.assign(vals,await csGetMany(batch))}catch(e){}}
+  const chunks={};const singles=[];
+  for(const k of old){const v=vals[k];if(typeof v!=='string'||!v)continue;const m=k.match(/^(.*?)[_.\-](\d{1,3})$/);if(m){(chunks[m[1]]=chunks[m[1]]||[]).push([Number(m[2]),v]);continue}singles.push([k,v])}
+  const tryParse=s=>{try{return JSON.parse(s)}catch(e){return null}};
+  const eat=o=>{if(looksSnapshot(o))mergeInto(found,o);else if(o&&typeof o==='object'){if(Array.isArray(o.lib))mergeInto(found,{lib:o.lib});if(o.days&&typeof o.days==='object')mergeInto(found,{days:o.days});if(o.bw)mergeInto(found,{bw:o.bw});if(o.mk)mergeInto(found,{mk:o.mk});if(o.prog)mergeInto(found,{prog:o.prog});if(o.cfg)mergeInto(found,{cfg:o.cfg})}};
+  for(const k in chunks){const arr=chunks[k].sort((a,b)=>a[0]-b[0]);const o=tryParse(arr.map(x=>x[1]).join(''));if(o)eat(o)}
+  for(const[k,v]of singles){const o=tryParse(v);if(!o)continue;
+    if(looksSnapshot(o)){eat(o);continue}
+    if(Array.isArray(o)&&o.length&&o[0]&&typeof o[0]==='object'){if(typeof o[0].s==='string'||('g'in o[0])){mergeInto(found,{lib:o});continue}if(Array.isArray(o[0].s)){continue}if(o[0].name||o[0].ex){mergeInto(found,{prog:o});continue}}
+    if(o&&typeof o==='object'&&!Array.isArray(o)){const ks=Object.keys(o);const datey=ks.length&&ks.every(x=>/^\d{4}-\d{2}-\d{2}$/.test(x));
+      if(datey){const v0=o[ks[0]];if(typeof v0==='number')mergeInto(found,{bw:o});else if(Array.isArray(v0))mergeInto(found,{days:o});else if(v0&&typeof v0==='object'&&('t'in v0||'i'in v0))mergeInto(found,{mk:o});else if(v0&&typeof v0==='object'&&('sl'in v0||'dc'in v0))mergeInto(found,{wb:o});continue}
+      if('th'in o||'tb'in o)mergeInto(found,{cfg:o})}}
+  return found}
+function scanLocal(){const found={lib:[],days:{},bw:{},mk:{},cfg:{}};try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith(NS))continue;const v=localStorage.getItem(k);if(!v||v.length<20)continue;let o;try{o=JSON.parse(v)}catch(e){continue}if(looksSnapshot(o))mergeInto(found,o)}}catch(e){}return found}
+async function boot(){
+  tgInit();applyTheme(false);
+  let loaded=null,src='';
+  if(CS){try{setBoot('Читаю облако Telegram…');loaded=await loadNewFormat();if(loaded)src='cloud-new'}catch(e){}}
+  if(!loaded){
+    let legacy=null;
+    if(CS){try{setBoot('Ищу данные прежних версий…');legacy=await scanLegacy()}catch(e){}}
+    const local=scanLocal();
+    const base={v:6,lib:[],prog:[],days:{},bw:{},mk:{},wb:{},fin:{},rh:[],arc:{},cfg:{...S.cfg}};
+    if(legacy)mergeInto(base,legacy);mergeInto(base,local);
+    const hadAnything=base.lib.length||Object.keys(base.days).length;
+    if(CS||hadAnything){mergeInto(base,EMBED);src=hadAnything?'migrated':'embedded'}
+    else{mergeInto(base,EMBED);src='embedded-local'}
+    if(hadAnything||src.startsWith('embedded'))loaded=base;
+  }
+  S={...S,...loaded,cfg:{...S.cfg,...(loaded.cfg||{})}};
+  normalizeState();
+  if(!S.rh.length)rebuildRH();
+  const purged=purgeWellbeing(true);
+  if(src!=='cloud-new'){S.cfg.seeded=1;dirty=true}
+  applyTheme(false);render();startTimerRestore();
+  $('#boot').classList.add('off');setTimeout(()=>$('#boot').remove(),500);
+  const nd=Object.keys(S.days).length,ne=S.lib.length;
+  if(src==='cloud-new')toast('ok','cloud','Данные из облака на месте');
+  else if(src==='migrated')toast('ok','cloud',`Данные перенесены: ${nd} ${plural(nd,'тренировка','тренировки','тренировок')}, ${ne} ${plural(ne,'упражнение','упражнения','упражнений')}. Старые ключи не тронуты.`);
+  else toast('ok','cloud',`Загружена встроенная копия: ${nd} тренировок. Сохраняю в облако.`);
+  if(purged)toast('warn','trash',`Автоочистка: ${purged} старых заметок перенесено в архив`);
+  if(!CS)toast('warn','warn','Облако недоступно (открой в Telegram). Пока сохраняю на телефон.',6000);
+  if(dirty)scheduleSave(300);
+  setInterval(tickMidnight,30000);
+}
+function setBoot(t){const el=$('#boot-status');if(el)el.textContent=t}
+
+/* ---------- СОХРАНЕНИЕ (двойной буфер + зеркало) ---------- */
+function serialize(){const o={v:6};for(const s of SECTIONS)o[s]=S[s];return o}
+function mirror(){try{const json=JSON.stringify(serialize());const prev=localStorage.getItem(NS+'_mirror');if(prev)localStorage.setItem(NS+'_mirror_prev',prev);localStorage.setItem(NS+'_mirror',json);localStorage.setItem(NS+'_mirror_ts',String(Date.now()))}catch(e){}}
+function setCloud(st){UI.cloud=st;const d=$('#cloud-dot');if(d)d.className=st==='saving'?'saving':st==='err'?'err':st==='off'?'off':''}
+function scheduleSave(ms){dirty=true;setCloud(CS?'saving':'off');mirror();clearTimeout(saveTimer);saveTimer=setTimeout(doSave,ms??700)}
+async function doSave(){
+  if(saving){dirty=true;return}
+  mirror();
+  if(!CS){setCloud('off');dirty=false;return}
+  saving=true;dirty=false;setCloud('saving');
+  try{
+    let meta=null;try{const r=await csGet(NS+'_meta');meta=r?JSON.parse(r):null}catch(e){}
+    const target=meta?(1-meta.gen):0;
+    const data=serialize();const parts={};const writes=[];
+    for(const sec of SECTIONS){const str=JSON.stringify(data[sec]??(sec==='rh'||sec==='lib'||sec==='prog'?[]:{}));const n=Math.max(1,Math.ceil(str.length/CHUNK));parts[sec]=n;for(let i=0;i<n;i++)writes.push([`${NS}_${target}_${sec}_${i}`,str.slice(i*CHUNK,(i+1)*CHUNK)||' '])}
+    for(const[k,v]of writes)await csSet(k,v);
+    const newMeta={gen:target,parts,prevParts:meta?(meta.gen===target?meta.prevParts:meta.parts):null,ts:Date.now(),v:6};
+    await csSet(NS+'_meta',JSON.stringify(newMeta));
+    // подчистить ТОЛЬКО свои устаревшие хвосты этого поколения
+    try{const keys=await csKeys();const need=new Set(writes.map(w=>w[0]));for(const k of keys){if(k.startsWith(NS+'_'+target+'_')&&!need.has(k))await csDel(k)}}catch(e){}
+    UI.lastSave=Date.now();setCloud('ok');
+  }catch(e){setCloud('err');toast('err','warn','Не сохранилось в облако. Копия на телефоне есть — нажми на точку вверху, чтобы повторить.',6000)}
+  saving=false;if(dirty)scheduleSave(400);
+}
+window.addEventListener('pagehide',()=>{mirror();if(dirty&&CS){try{doSave()}catch(e){}}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){mirror();if(dirty)doSave()}else if(UI.cloud==='err'&&dirty)doSave()});
+
+/* ---------- АВТООЧИСТКА САМОЧУВСТВИЯ ---------- */
+function purgeWellbeing(silent){
+  if(S.cfg.ret==='never')return 0;const cut=daysAgo(Number(S.cfg.ret));let n=0;
+  const keys=new Set([...Object.keys(S.wb),...Object.keys(S.mk)]);
+  for(const d of keys){if(d>=cut)continue;const a={};if(S.wb[d]){a.w=S.wb[d];delete S.wb[d];n++}if(S.mk[d]){a.m=S.mk[d];delete S.mk[d];n++}if(Object.keys(a).length)S.arc[d]=a}
+  const ak=Object.keys(S.arc).sort();while(ak.length>ARC_CAP){delete S.arc[ak.shift()]}
+  if(n&&!silent)scheduleSave();return n}
+
+/* ---------- ТЕМЫ ---------- */
+function applyTheme(save){document.documentElement.dataset.th=S.cfg.th;document.documentElement.classList.toggle('noanim',!S.cfg.anim);
+  document.documentElement.style.setProperty('--cu-a',S.cfg.a||'#00ffff');document.documentElement.style.setProperty('--cu-i',S.cfg.i||'#ff0000');
+  const mt=document.querySelector('meta[name=theme-color]');if(mt)mt.content=cssVar('--bg');tgColors();if(save)scheduleSave()}
+function cycleTheme(){const ids=THEMES.map(t=>t.id);S.cfg.th=ids[(ids.indexOf(S.cfg.th)+1)%ids.length];applyTheme(true);vib('sel');toast('ok','moon','Тема: '+THEMES.find(t=>t.id===S.cfg.th).n,1800);if(UI.tab==='set')render()}
+
+/* ---------- TOAST / CONFETTI ---------- */
+function toast(kind,icon,text,ms,undoFn){
+  const root=$('#toast-root');const el=document.createElement('div');el.className='toast '+kind;
+  el.innerHTML=`<svg class="ic"><use href="#i-${icon}"/></svg><span>${esc(text)}</span>${undoFn?'<button>Вернуть</button>':''}`;
+  if(undoFn)el.querySelector('button').onclick=()=>{undoFn();kill()};
+  root.appendChild(el);while(root.children.length>3)root.firstChild.remove();
+  const kill=()=>{el.classList.add('out');setTimeout(()=>el.remove(),260)};
+  setTimeout(kill,ms||(undoFn?5200:3000));return kill}
+function confetti(){if(!S.cfg.anim)return;const root=$('#confetti');const cols=[cssVar('--acc'),cssVar('--acc2'),cssVar('--g-back'),cssVar('--g-legs'),cssVar('--g-sh'),cssVar('--g-arms')];
+  for(let i=0;i<26;i++){const p=document.createElement('i');p.style.left=(8+Math.random()*84)+'%';p.style.background=cols[i%cols.length];p.style.setProperty('--d',(0.9+Math.random()*0.9)+'s');p.style.setProperty('--dx',(Math.random()*160-80)+'px');p.style.setProperty('--rot',(Math.random()*720-360)+'deg');p.style.animationDelay=(Math.random()*0.15)+'s';root.appendChild(p);setTimeout(()=>p.remove(),2200)}}
+
+/* ---------- SHEETS ---------- */
+let sheetOnClose=null;
+function openSheet(html,onClose){sheetOnClose=onClose||null;const r=$('#sheet-root');r.className='on';r.innerHTML=`<div class="scrim" data-act="sheet-close"></div><div class="sheet"><div class="grab"></div>${html}</div>`;vib('sel')}
+function closeSheet(){const r=$('#sheet-root');r.className='';r.innerHTML='';if(sheetOnClose){const f=sheetOnClose;sheetOnClose=null;f()}}
+function confirmSheet(title,desc,okText,fn,danger){openSheet(`<h2><svg class="ic"><use href="#i-${danger?'warn':'info'}"/></svg>${esc(title)}</h2><div class="desc">${desc}</div><div class="actions"><button class="btn sec" data-act="sheet-close">Отмена</button><button class="btn ${danger?'danger':''}" id="cf-ok">${esc(okText)}</button></div>`);
+  $('#cf-ok').onclick=()=>{closeSheet();fn()}}
+
+/* ---------- AUTOCOMPLETE ---------- */
+function acHTML(ctx,placeholder,id){return `<div class="acwrap"><input id="${id||'ac-'+ctx}" data-ac="${ctx}" placeholder="${esc(placeholder)}" autocomplete="off"><div class="ac" id="acbox-${ctx}" hidden></div></div>`}
+function renderAC(ctx){
+  const inp=$(`[data-ac="${ctx}"]`),box=$('#acbox-'+ctx);if(!inp||!box)return;
+  const q=norm(inp.value);if(!q){box.hidden=true;return}
+  const matches=S.lib.filter(e=>norm(e.n).includes(q)||norm(e.g).includes(q)||norm(e.t).includes(q)||norm(e.s).includes(q));
+  let html='';const byG={};for(const e of matches.slice(0,30))(byG[e.g||'Без группы']=byG[e.g||'Без группы']||[]).push(e);
+  const gs=[...GORDER.filter(g=>byG[g]),...Object.keys(byG).filter(g=>!GORDER.includes(g))];
+  for(const g of gs){html+=`<div class="grp"><span class="gdot" style="background:${gcolor(g==='Без группы'?'':g)}"></span>${esc(g)}</div>`;
+    for(const e of byG[g])html+=`<button data-act="ac-pick" data-ctx="${ctx}" data-name="${esc(e.n)}">${esc(e.n)}<span class="tiny">${e.rest?e.rest+'с':''}</span></button>`}
+  if(!matches.length){const fz=S.lib.map(e=>[lev(q,norm(e.n)),e]).filter(x=>x[0]<=2&&q.length>=4).sort((a,b)=>a[0]-b[0])[0];
+    if(fz)html+=`<button class="fuzzy" data-act="ac-pick" data-ctx="${ctx}" data-name="${esc(fz[1].n)}">Похоже на «${esc(fz[1].n)}» — добавить его?</button>`;
+    html+=`<button class="create" data-act="ac-create" data-ctx="${ctx}" data-name="${esc(inp.value.trim())}"><svg class="ic" style="width:16px;height:16px"><use href="#i-plus"/></svg>Создать «${esc(inp.value.trim())}»</button>`}
+  box.innerHTML=html;box.hidden=false}
+function hideACs(){$$('.ac').forEach(b=>b.hidden=true)}
+
+/* ---------- RENDER CORE ---------- */
+const TABS={home:renderHome,diary:renderDiary,stats:renderStats,lib:renderLib,set:renderSettings};
+function render(keepScroll){
+  const y=window.scrollY;const v=$('#view');
+  v.innerHTML=`<div class="panel">${TABS[UI.tab]()}</div>`;
+  $$('#view .panel > *').forEach((el,i)=>el.style.setProperty('--i',Math.min(i,10)));
+  $$('#tabbar button').forEach(b=>b.classList.toggle('on',b.dataset.tab===UI.tab));
+  if(keepScroll)window.scrollTo(0,y);else window.scrollTo(0,0);
+  afterRender()}
+function afterRender(){if(UI.tab==='diary'){const a=UI.anchor;if(a){const el=document.getElementById(a);if(el)el.scrollIntoView({block:'nearest'});UI.anchor=null}}}
+function switchTab(t){if(t===UI.tab)return;vib('sel');const v=$('#view');const p=v.querySelector('.panel');if(p)p.classList.add('leave');
+  setTimeout(()=>{UI.tab=t;UI.ssMode=false;UI.ssSel=[];render()},S.cfg.anim?120:0)}
+function rerender(){render(true)}
+
+/* ================= HOME ================= */
+function renderHome(){
+  const t=today();const wb=S.wb[t];const streak=weekStreak();const mc=monthCount();
+  const active=S.days[t]&&S.days[t].length&&!S.fin[t];
+  const next=S.prog[S.cfg.nx];
+  let h=`<div class="row" style="margin-bottom:14px"><div><div class="tiny" style="text-transform:uppercase;letter-spacing:.1em;font-weight:800">${fdateFull(t)}</div><div class="bigdate">Привет, атлет</div></div><div class="sp"></div><div class="flame"><svg class="ic"><use href="#i-flame"/></svg>${streak} нед.</div></div>`;
+  if(!CS)h+=`<div class="banner"><svg class="ic"><use href="#i-warn"/></svg>Облако Telegram недоступно. Данные сохраняются на этом телефоне. Открой приложение через Telegram.</div>`;
+  // wellbeing
+  h+=`<div class="card ${wb?'':'glow'}"><h3><svg class="ic"><use href="#i-heart"/></svg>Как ты сегодня?<span class="sp"></span>${wb?'<span class="tiny">записано ✓</span>':''}</h3>`;
+  if(wb&&!UI.wbEdit){h+=wbSummary(wb)+`<div class="row" style="margin-top:10px"><button class="btn sec sm" data-act="wb-edit"><svg class="ic" style="width:15px;height:15px"><use href="#i-edit"/></svg>Изменить</button></div>`}
+  else{const cur=wb||UI.wbDraft||{};
+    h+=wbScale('sl','Сон','😴 → 😇',cur.sl)+wbScale('en','Энергия','🪫 → ⚡',cur.en)+wbScale('st','Самочувствие','плохо → отлично',cur.st);
+    const dc=cur.dc||[];
+    h+=`<div class="wb-field"><div class="lbl">Дискомфорт / боль <span>${dc.length?dc.length+' '+plural(dc.length,'зона','зоны','зон'):'нет'}</span></div><div class="chips">${dc.map((x,i)=>`<span class="dc-tag">${esc(x.p)} · ${x.v}/10 <span class="x" data-act="wb-dc-del" data-i="${i}">✕</span></span>`).join('')}<button class="chip mini" data-act="wb-dc-open"><svg class="ic" style="width:13px;height:13px"><use href="#i-plus"/></svg>Добавить</button></div></div>`;
+    h+=`<div class="wb-field"><div class="lbl">Комментарий</div><textarea id="wb-c" placeholder="Как тело? Что беспокоит?">${esc(cur.c||'')}</textarea></div>`;
+    h+=`<button class="btn wide" data-act="wb-save"><svg class="ic"><use href="#i-check"/></svg>Сохранить состояние</button>`}
+  h+=`</div>`;
+  // active / quick start
+  if(active){const total=S.days[t].length;const done=S.days[t].filter(e=>e.s.length).length;const pct=total?Math.round(done/total*100):0;
+    h+=`<div class="card glow"><div class="row"><div class="prog-ring">${ringSVG(pct,52,cssVar('--acc'))}<div class="pct">${done}/${total}</div></div><div class="sp"><b>Тренировка идёт</b><div class="sub">${done} из ${total} ${plural(total,'упражнения','упражнений','упражнений')} · ${fmtTon(tonnage(t))}</div></div><button class="btn" data-act="goto-diary"><svg class="ic"><use href="#i-play"/></svg>Продолжить</button></div></div>`}
+  else if(S.fin[t]){h+=`<div class="card"><div class="row"><span class="fin-badge"><svg class="ic" style="width:14px;height:14px"><use href="#i-check"/></svg>Сегодня завершена</span><div class="sp"></div><button class="btn sec sm" data-act="goto-diary">Открыть</button></div></div>`}
+  h+=`<div class="card"><h3><svg class="ic"><use href="#i-bolt"/></svg>Быстрый старт</h3>
+    <div class="optlist">
+      <button data-act="quick-next"><svg class="ic" style="color:var(--acc)"><use href="#i-play"/></svg><span>День программы: <b>${esc(next?next.name:'—')}</b></span><span class="tiny">с подтверждением</span></button>
+      <button data-act="quick-repeat"><svg class="ic" style="color:var(--info)"><use href="#i-undo"/></svg><span>Повторить прошлую тренировку</span></button>
+      <button data-act="quick-empty"><svg class="ic" style="color:var(--tx2)"><use href="#i-plus"/></svg><span>Пустая тренировка</span></button>
+    </div></div>`;
+  // program
+  h+=`<div class="card"><h3><svg class="ic"><use href="#i-cal"/></svg>Программа · ${S.prog.length} ${plural(S.prog.length,'день','дня','дней')}<span class="sp"></span><button class="ibtn ${UI.progEdit?'on':''}" data-act="prog-toggle" title="Редактировать"><svg class="ic"><use href="#i-edit"/></svg></button></h3>`;
+  S.prog.forEach((p,i)=>{h+=`<div class="progday ${i===S.cfg.nx?'next':''}"><span class="idx">${i+1}</span><div class="sp"><div class="pn">${esc(p.name)} ${i===S.cfg.nx?'<span class="nexttag">· следующий</span>':''}</div><div class="pc">${p.ex.length} ${plural(p.ex.length,'упражнение','упражнения','упражнений')}</div></div>
+    ${UI.progEdit?`<button class="ibtn" data-act="prog-up" data-i="${i}"><svg class="ic"><use href="#i-arr-up"/></svg></button><button class="ibtn" data-act="prog-down" data-i="${i}"><svg class="ic"><use href="#i-arr-dn"/></svg></button><button class="ibtn" data-act="prog-edit" data-i="${i}"><svg class="ic"><use href="#i-edit"/></svg></button><button class="ibtn" data-act="prog-del" data-i="${i}"><svg class="ic"><use href="#i-trash"/></svg></button>`:`<button class="btn ghost sm" data-act="prog-start" data-i="${i}">Начать</button>`}</div>`});
+  if(UI.progEdit&&S.prog.length<7)h+=`<button class="btn ghost wide" data-act="prog-add"><svg class="ic" style="width:15px;height:15px"><use href="#i-plus"/></svg>Добавить день (спросит подтверждение)</button>`;
+  h+=`</div>`;
+  // heatmap + bw quick
+  h+=`<div class="card"><h3><svg class="ic"><use href="#i-flame"/></svg>Активность<span class="sp"></span><span class="tiny">${mc} трен. за месяц</span></h3>${heatHTML(15)}<div class="tiny" style="margin-top:6px">Серия: <b class="mono" style="color:var(--acc2)">${streak} нед.</b> подряд · нажми на день, чтобы открыть его</div></div>`;
+  const bwT=S.bw[t];
+  h+=`<div class="card"><h3><svg class="ic"><use href="#i-scale"/></svg>Вес тела</h3><div class="row"><input id="bw-quick" class="mono" inputmode="decimal" placeholder="${bwT?fmtKg(bwT):'например 57,5'}" style="flex:1" value="${bwT?fmtKg(bwT):''}"><span class="sub">кг</span><button class="btn sm" data-act="bw-quick-save">Записать</button></div>${Object.keys(S.bw).length?`<div class="tiny" style="margin-top:8px">Последний: ${fmtKg(S.bw[Object.keys(S.bw).sort().pop()])} кг · ${fdate(Object.keys(S.bw).sort().pop())}</div>`:''}</div>`;
+  return h}
+function wbScale(k,label,hint,val){return `<div class="wb-field"><div class="lbl">${label} <span>${hint}</span></div><div class="scale">${[1,2,3,4,5].map(v=>`<button data-act="wb-scale" data-k="${k}" data-v="${v}" class="${val===v?'on':''}">${v}</button>`).join('')}</div></div>`}
+function wbSummary(w){const L={sl:'Сон',en:'Энергия',st:'Самочувствие'};let h='<div class="chips">';for(const k in L)if(w[k])h+=`<span class="chip mini on" style="pointer-events:none">${L[k]} ${w[k]}/5</span>`;h+='</div>';
+  if(w.dc&&w.dc.length)h+=`<div class="chips" style="margin-top:8px">${w.dc.map(x=>`<span class="dc-tag">${esc(x.p)} · ${x.v}/10</span>`).join('')}</div>`;
+  if(w.c)h+=`<div class="sub" style="margin-top:8px">«${esc(w.c)}»</div>`;return h}
+function ringSVG(pct,size,color){const r=(size-8)/2,c=2*Math.PI*r;return `<svg width="${size}" height="${size}"><circle cx="${size/2}" cy="${size/2}" r="${r}" stroke="var(--line2)" stroke-width="5" fill="none"/><circle cx="${size/2}" cy="${size/2}" r="${r}" stroke="${color}" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-pct/100)}" style="transition:stroke-dashoffset .6s var(--ease)"/></svg>`}
+function heatHTML(weeks){
+  const end=new Date();const dow=(end.getDay()+6)%7;end.setDate(end.getDate()-dow+6);
+  const start=new Date(end);start.setDate(start.getDate()-(weeks*7-1));
+  let cells='';const t=today();
+  for(let i=0;i<weeks*7;i++){const d=new Date(start);d.setDate(start.getDate()+i);const k=dkey(d);if(d>new Date()){cells+='<i style="visibility:hidden"></i>';continue}
+    const n=setsCount(k);const lvl=n===0?0:n<8?1:n<16?2:n<26?3:4;
+    cells+=`<i class="l${lvl} ${k===t?'today':''}" data-act="cal-day" data-d="${k}" title="${fdate(k)}: ${n} подх."></i>`}
+  return `<div class="heat">${cells}</div>`}
+
+/* ================= DIARY ================= */
+function renderDiary(){
+  const d=UI.diaryDate;const exs=S.days[d]||[];const mk=S.mk[d];const fin=S.fin[d];
+  let h=`<div class="daynav"><button class="ibtn" data-act="d-prev"><svg class="ic"><use href="#i-left"/></svg></button><div class="date">${d===today()?'Сегодня':fdateFull(d)}<small>${d===today()?fdateFull(d):d}</small></div><button class="ibtn" data-act="d-next" ${d>=today()?'disabled style="opacity:.3"':''}><svg class="ic"><use href="#i-chev"/></svg></button><button class="ibtn" data-act="d-today" title="Сегодня"><svg class="ic"><use href="#i-cal"/></svg></button></div>`;
+  if(fin)h+=`<div class="row" style="margin-bottom:10px"><span class="fin-badge"><svg class="ic" style="width:14px;height:14px"><use href="#i-check"/></svg>Тренировка завершена</span><div class="sp"></div><button class="btn ghost sm" data-act="reopen">Открыть снова</button></div>`;
+  h+=`<div class="mkbox ${mk&&mk.i?'star':''}"><svg class="ic"><use href="#i-${mk&&mk.i?'star':'note'}"/></svg><div class="sp">${mk&&mk.t?esc(mk.t):'<span class="tiny">Заметка к этому дню…</span>'}</div><button class="ibtn" data-act="mk-edit"><svg class="ic"><use href="#i-edit"/></svg></button></div>`;
+  if(UI.ssMode){h+=`<div class="card glow" style="padding:12px 14px"><div class="row"><svg class="ic" style="color:var(--acc)"><use href="#i-link"/></svg><b style="font-size:13px">Выбери упражнения для суперсета</b><div class="sp"></div><button class="btn sm" data-act="ss-make" ${UI.ssSel.length<2?'disabled':''}>Объединить (${UI.ssSel.length})</button><button class="ibtn" data-act="ss-cancel"><svg class="ic"><use href="#i-x"/></svg></button></div></div>`}
+  if(!exs.length){h+=`<div class="card"><div class="empty"><svg class="ic"><use href="#i-db"/></svg><p>В этот день пусто. Добавь первое упражнение ниже — или начни день программы на вкладке «Сегодня».</p></div></div>`}
+  else{
+    const bests=allBests();let i=0;
+    while(i<exs.length){
+      const gid=exs[i].ss;
+      if(gid){let j=i;while(j<exs.length&&exs[j].ss===gid)j++;
+        h+=`<div class="ss-rail"><div class="ss-head"><svg class="ic" style="width:14px;height:14px"><use href="#i-link"/></svg>Суперсет · отдых после A${j-i}<div class="sp"></div><button class="ibtn" data-act="ss-clear" data-g="${gid}" title="Разъединить"><svg class="ic"><use href="#i-x"/></svg></button></div>`;
+        for(let k=i;k<j;k++)h+=exCard(exs[k],k,d,'A'+(k-i+1),bests);
+        h+='</div>';i=j}
+      else{h+=exCard(exs[i],i,d,null,bests);i++}}
+    const totalSets=exs.reduce((a,e)=>a+e.s.length,0);
+    h+=`<div class="card" style="padding:12px 14px"><div class="row"><div class="sub"><b class="mono">${exs.length}</b> упр. · <b class="mono">${totalSets}</b> подх. · <b class="mono">${fmtTon(tonnage(d))}</b></div><div class="sp"></div>${!fin?`<button class="btn sm" data-act="finish-open"><svg class="ic" style="width:15px;height:15px"><use href="#i-check"/></svg>Завершить</button>`:''}</div></div>`;
+  }
+  h+=`<div class="card" style="overflow:visible"><h3><svg class="ic"><use href="#i-plus"/></svg>Добавить упражнение</h3>${acHTML('day','Название или группа мышц, например «спина»…')}<div class="row" style="margin-top:10px"><button class="btn ghost sm" data-act="ss-mode"><svg class="ic" style="width:14px;height:14px"><use href="#i-link"/></svg>Собрать суперсет</button><div class="sp"></div><span class="tiny">регистр и «е/ё» не важны</span></div></div>`;
+  return h}
+function exCard(e,i,d,ssLabel,bests){
+  const lib=libBy(e.n)||{g:'',t:'',s:''};const last=lastSession(e.n,d);const best=bests[norm(e.n)];
+  const isRecToday=best&&best.d===d;const sel=UI.ssSel.includes(i);
+  let h=`<div class="excard ${sel?'sel':''}" id="ex-${i}"><div class="exhead">${ssLabel?`<span class="ss-badge">${ssLabel}</span>`:''}${UI.ssMode?`<button class="checkbtn ${sel?'done':''}" data-act="ss-toggle" data-i="${i}" style="width:34px;height:34px"><svg class="ic"><use href="#i-check"/></svg></button>`:''}<div class="sp"><div class="nm">${esc(e.n)} ${isRecToday?'<span class="rec-badge">🏆 рекорд</span>':''}</div><div class="meta">${gchip(lib.g)}${lib.t?`<span class="tiny">🎯 ${esc(lib.t)}</span>`:''}${lib.s?`<span class="tiny">+ ${esc(lib.s)}</span>`:''}</div></div>${!UI.ssMode?`<button class="ibtn" data-act="ex-menu" data-i="${i}"><svg class="ic"><use href="#i-dots"/></svg></button>`:''}</div>`;
+  if(last){const ls=last.ex.s.map(x=>fmtKg(x[0])+'×'+x[1]).join(' · ');h+=`<div class="hint">прошлый раз (${fdate(last.d)}): ${esc(ls)}</div>`}
+  e.s.forEach((s,j)=>{h+=setRow(e,i,j,s,d,true)});
+  h+=setRow(e,i,e.s.length,null,d,false,last);
+  h+=`<div class="exfoot"><button class="qchip" data-act="chip-w" data-i="${i}" data-d="-2.5">−2,5 кг</button><button class="qchip" data-act="chip-w" data-i="${i}" data-d="2.5">+2,5 кг</button><button class="qchip" data-act="chip-r" data-i="${i}" data-d="1">+1 повт</button><button class="qchip" data-act="chip-r" data-i="${i}" data-d="-1">−1 повт</button><div class="sp"></div><button class="qchip" data-act="set-add" data-i="${i}"><svg class="ic" style="width:12px;height:12px;vertical-align:-2px"><use href="#i-plus"/></svg> подход</button></div>`;
+  return h+'</div>'}
+function setRow(e,i,j,s,d,done,last){
+  if(done){return `<div class="setrow done" id="sr-${i}-${j}"><span class="num">${j+1}</span><span class="val mono">${fmtKg(s[0])} <small>кг</small> × ${s[1]} <small>повт</small></span><button class="ibtn" data-act="set-edit" data-i="${i}" data-j="${j}" title="Изменить"><svg class="ic"><use href="#i-edit"/></svg></button><button class="ibtn" data-act="set-del" data-i="${i}" data-j="${j}"><svg class="ic"><use href="#i-trash"/></svg></button><button class="checkbtn done" data-act="set-edit" data-i="${i}" data-j="${j}"><svg class="ic"><use href="#i-check"/></svg></button></div>`}
+  let pw='',pr='';
+  if(e.s.length){pw=e.s[e.s.length-1][0];pr=e.s[e.s.length-1][1]}
+  else if(last&&last.ex.s[0]){pw=last.ex.s[0][0];pr=last.ex.s[0][1]}
+  const hint=pw!==''?`placeholder="${fmtKg(pw)}"`:'placeholder="кг"';const hintR=pr!==''?`placeholder="${pr}"`:'placeholder="повт"';
+  return `<div class="setrow" id="sr-${i}-${j}"><span class="num">${j+1}</span><input class="w mono" id="w-${i}-${j}" inputmode="decimal" ${hint}><span class="times">×</span><input class="r mono" id="r-${i}-${j}" inputmode="numeric" ${hintR}><button class="checkbtn" data-act="set-check" data-i="${i}" data-j="${j}" title="Записать (пусто = как прошлый)"><svg class="ic"><use href="#i-check"/></svg></button></div>`}
+
+/* ================= STATS ================= */
+function periodDays(){const p=PERIODS.find(x=>x[0]===S.cfg.sp)||PERIODS[1];return p[1]}
+function periodCut(){const n=periodDays();return n>=99999?'0000':daysAgo(n)}
+function renderStats(){
+  const cut=periodCut();const dates=Object.keys(S.days).filter(d=>d>=cut&&S.days[d].some(e=>e.s.length)).sort();
+  let sets=0,ton=0;const gSets={},gLast={};
+  for(const d of dates)for(const e of S.days[d]){const g=(libBy(e.n)||{}).g||'Без группы';for(const[w,r]of e.s){sets++;ton+=w*r;gSets[g]=(gSets[g]||0)+1}}
+  for(const d in S.days)for(const e of S.days[d]){if(!e.s.length)continue;const g=(libBy(e.n)||{}).g||'Без группы';if(!gLast[g]||d>gLast[g])gLast[g]=d}
+  const recs=S.rh.filter(r=>r.d>=cut);
+  let h=`<div class="chips" style="margin-bottom:12px">${PERIODS.map(p=>`<button class="chip ${S.cfg.sp===p[0]?'on':''}" data-act="per" data-p="${p[0]}">${p[2]}</button>`).join('')}</div>`;
+  h+=`<div class="card"><h3><svg class="ic"><use href="#i-chart"/></svg>Итоги · ${PERIODS.find(p=>p[0]===S.cfg.sp)[2].toLowerCase()}</h3><div class="statgrid">
+    <div class="stat"><div class="v mono">${dates.length}</div><div class="k">тренировок</div></div>
+    <div class="stat"><div class="v mono">${sets}</div><div class="k">подходов</div></div>
+    <div class="stat"><div class="v mono">${fmtTon(ton)}</div><div class="k">тоннаж</div></div>
+    <div class="stat"><div class="v mono" style="color:#e3b458">${recs.length} 🏆</div><div class="k">рекордов</div></div></div></div>`;
+  // muscle balance
+  const gs=groups();const allG=[...gs,'Без группы'].filter(g=>gSets[g]||S.lib.some(e=>(e.g||'Без группы')===g));
+  const maxG=Math.max(1,...Object.values(gSets));
+  h+=`<div class="card"><h3><svg class="ic"><use href="#i-db"/></svg>Мышцы · подходы</h3>`;
+  for(const g of allG){const n=gSets[g]||0;const c=gcolor(g==='Без группы'?'':g);const last=gLast[g];
+    h+=`<div class="bar-row"><span class="bl"><span class="gdot" style="background:${c}"></span>${esc(g)}</span><div class="track"><div class="fill" style="width:${Math.round(n/maxG*100)}%;background:linear-gradient(90deg,color-mix(in srgb,${c} 60%,transparent),${c})"></div></div><span class="bv">${n}</span></div>`}
+  const warns=[];const pd=periodDays();
+  if(pd>=28){for(const g of gs){const n=gSets[g]||0;const share=sets?n/sets:0;
+    if(n===0)warns.push(['cool',`${g}: 0 подходов за период. Давно не тренировалась.`]);
+    else if(share>0.45&&sets>=20)warns.push(['hot',`${g}: ${Math.round(share*100)}% всей нагрузки. Возможно, перебор.`])}}
+  for(const w of warns.slice(0,3))h+=`<div class="warnbox ${w[0]==='cool'?'cool':''}"><svg class="ic"><use href="#i-${w[0]==='cool'?'info':'warn'}"/></svg>${esc(w[1])}</div>`;
+  h+=`</div>`;
+  // exercise progress
+  const exNames=[...new Set(Object.values(S.days).flat().map(e=>e.n))];
+  if(!UI.statEx||!exNames.includes(UI.statEx)){const cnt={};for(const d in S.days)for(const e of S.days[d])cnt[e.n]=(cnt[e.n]||0)+1;UI.statEx=exNames.sort((a,b)=>(cnt[b]||0)-(cnt[a]||0))[0]||null}
+  h+=`<div class="card" style="overflow:visible"><h3><svg class="ic"><use href="#i-chart"/></svg>Прогресс упражнения</h3>${acHTML('stat',UI.statEx||'Выбери упражнение…','ac-stat')}
+    <div class="tiny" style="margin:6px 0 10px">Сейчас: <b style="color:var(--tx)">${esc(UI.statEx||'—')}</b></div>`;
+  if(UI.statEx){const q=norm(UI.statEx);const pts=[];const vols=[];
+    for(const d of Object.keys(S.days).sort()){if(d<cut)continue;const e=S.days[d].find(x=>norm(x.n)===q);if(!e||!e.s.length)continue;let mw=0,v=0;for(const[w,r]of e.s){mw=Math.max(mw,w);v+=w*r}pts.push({x:d,y:mw});vols.push({x:d,y:v})}
+    if(pts.length){h+=lineChart(pts,'Макс. вес, кг',cssVar('--acc'));h+=`<div class="divider"></div>`+barChart(vols,'Объём, кг',cssVar('--info'));
+      const b=bestOf(UI.statEx);h+=`<div class="row" style="margin-top:10px"><span class="rec-badge">🏆 ${fmtKg(b.w)} кг</span><span class="tiny">${b.d?fdate(b.d)+' · '+b.r+' повт':''} · за всё время</span></div>`}
+    else h+=`<div class="tiny">За этот период упражнение не встречалось.</div>`}
+  h+=`</div>`;
+  // records feed
+  h+=`<div class="card"><h3><svg class="ic"><use href="#i-cup"/></svg>Рекорды · макс. вес</h3>`;
+  const bests=Object.values(allBests()).sort((a,b)=>b.d.localeCompare(a.d));
+  if(!bests.length)h+='<div class="tiny">Пока нет записанных подходов.</div>';
+  for(const b of bests.slice(0,12))h+=`<div class="listrow"><span class="gdot" style="background:${gcolor((libBy(b.n)||{}).g)}"></span><span class="sp" style="font-weight:700">${esc(b.n)}</span><span class="mono" style="color:#e3b458">${fmtKg(b.w)} кг</span><span class="tiny">${fdate(b.d)}</span></div>`;
+  if(recs.length){h+=`<div class="divider"></div><div class="tiny" style="margin-bottom:6px">Новые рекорды за период:</div>`;for(const r of recs.slice(-8).reverse())h+=`<div class="listrow"><span>🏆</span><span class="sp">${esc(r.n)}</span><span class="mono">${fmtKg(r.w)} кг × ${r.r}</span><span class="tiny">${fdate(r.d)}</span></div>`}
+  h+=`</div>`;
+  // body weight
+  h+=`<div class="card"><h3><svg class="ic"><use href="#i-scale"/></svg>Вес тела<span class="sp"></span><button class="btn sec sm" data-act="bw-add-open"><svg class="ic" style="width:14px;height:14px"><use href="#i-plus"/></svg>Запись</button></h3>`;
+  const bwPts=Object.keys(S.bw).filter(d=>d>=cut).sort().map(d=>({x:d,y:S.bw[d]}));
+  if(bwPts.length)h+=lineChart(bwPts,'кг',cssVar('--acc2'));else h+='<div class="tiny">Нет записей за период.</div>';
+  const bwAll=Object.keys(S.bw).sort().reverse().slice(0,8);
+  for(const d of bwAll)h+=`<div class="listrow"><span class="tiny">${fdateFull(d)}</span><div class="sp"></div><span class="mono">${fmtKg(S.bw[d])} кг</span><button class="ibtn" data-act="bw-del" data-d="${d}"><svg class="ic"><use href="#i-trash"/></svg></button></div>`;
+  h+=`</div>`;
+  h+=`<div class="card"><h3><svg class="ic"><use href="#i-flame"/></svg>Календарь · 26 недель</h3>${heatHTML(26)}<div class="tiny" style="margin-top:6px">Серия: <b class="mono" style="color:var(--acc2)">${weekStreak()} нед.</b> · за месяц: ${monthCount()} трен.</div></div>`;
+  return h}
+function lineChart(pts,label,color){
+  const W=340,H=130,P=26;const ys=pts.map(p=>p.y);let mn=Math.min(...ys),mx=Math.max(...ys);if(mx===mn){mx+=1;mn=Math.max(0,mn-1)}
+  const X=i=>pts.length===1?W/2:P+i*(W-2*P)/(pts.length-1);const Y=v=>H-22-(v-mn)*(H-46)/(mx-mn);
+  let path='',area='';pts.forEach((p,i)=>{const x=X(i),y=Y(p.y);path+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1)+' ';});
+  area=path+`L${X(pts.length-1).toFixed(1)} ${H-22} L${X(0).toFixed(1)} ${H-22} Z`;
+  const gid='lg'+uid();
+  let dots='';pts.forEach((p,i)=>{dots+=`<circle cx="${X(i)}" cy="${Y(p.y)}" r="${i===pts.length-1?4:2.5}" fill="${color}"><title>${fdate(p.x)}: ${fmtKg(p.y)}</title></circle>`});
+  const last=pts[pts.length-1];
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".28"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>
+  <line x1="${P}" y1="${Y(mx)}" x2="${W-P}" y2="${Y(mx)}" stroke="var(--line)" stroke-dasharray="3 4"/><line x1="${P}" y1="${Y(mn)}" x2="${W-P}" y2="${Y(mn)}" stroke="var(--line)" stroke-dasharray="3 4"/>
+  <text x="2" y="${Y(mx)+3}">${fmtKg(mx)}</text><text x="2" y="${Y(mn)+3}">${fmtKg(mn)}</text>
+  <path d="${area}" fill="url(#${gid})"/><path d="${path}" fill="none" stroke="${color}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>${dots}
+  <text x="${P}" y="${H-6}">${fdate(pts[0].x)}</text><text x="${W-P}" y="${H-6}" text-anchor="end">${fdate(last.x)}</text>
+  <text x="${X(pts.length-1)}" y="${Y(last.y)-8}" text-anchor="end" fill="${color}" font-weight="700" font-size="10">${fmtKg(last.y)}</text>
+  <text x="${W-2}" y="12" text-anchor="end">${esc(label)}</text></svg>`}
+function barChart(pts,label,color){
+  const W=340,H=100,P=26;const mx=Math.max(1,...pts.map(p=>p.y));const bw=Math.min(26,(W-2*P)/pts.length-4);
+  let bars='';pts.forEach((p,i)=>{const x=pts.length===1?W/2-bw/2:P+i*(W-2*P-bw)/(Math.max(1,pts.length-1));const h=(p.y/mx)*(H-40);
+    bars+=`<rect x="${x}" y="${H-22-h}" width="${bw}" height="${Math.max(2,h)}" rx="4" fill="${color}" opacity=".85"><title>${fdate(p.x)}: ${fmtTon(p.y)}</title></rect>`});
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}"><line x1="${P}" y1="${H-22}" x2="${W-P}" y2="${H-22}" stroke="var(--line)"/>${bars}<text x="${P}" y="${H-6}">${fdate(pts[0].x)}</text><text x="${W-P}" y="${H-6}" text-anchor="end">${fdate(pts[pts.length-1].x)}</text><text x="${W-2}" y="12" text-anchor="end">${esc(label)}</text></svg>`}
+
+/* ================= LIBRARY ================= */
+function renderLib(){
+  const q=norm(UI.libQ);
+  let h=`<div class="card" style="overflow:visible"><div class="row"><input id="lib-q" placeholder="Поиск: название, группа, мышца…" value="${esc(UI.libQ)}"><button class="btn sm" data-act="lib-add"><svg class="ic" style="width:15px;height:15px"><use href="#i-plus"/></svg>Новое</button></div><div class="tiny" style="margin-top:8px">${S.lib.length} ${plural(S.lib.length,'упражнение','упражнения','упражнений')} · нажми на упражнение, чтобы изменить</div></div>`;
+  const byG={};for(const e of S.lib){if(q&&!(norm(e.n).includes(q)||norm(e.g).includes(q)||norm(e.t).includes(q)||norm(e.s).includes(q)))continue;(byG[e.g||'Без группы']=byG[e.g||'Без группы']||[]).push(e)}
+  const gs=[...GORDER.filter(g=>byG[g]),...Object.keys(byG).filter(g=>!GORDER.includes(g))];
+  if(!gs.length)h+=`<div class="card"><div class="empty"><svg class="ic"><use href="#i-lib"/></svg><p>Ничего не нашлось. Создай новое упражнение кнопкой «Новое».</p></div></div>`;
+  for(const g of gs){const open=q?true:(UI.libOpen[g]!==false);const c=gcolor(g==='Без группы'?'':g);
+    h+=`<div class="libgrp ${open?'open':''}"><button data-act="grp-toggle" data-g="${esc(g)}"><span class="gdot" style="background:${c};width:11px;height:11px"></span>${esc(g)}<span class="cnt">${byG[g].length}</span><svg class="ic chev" style="width:16px;height:16px"><use href="#i-chev"/></svg></button><div class="items">`;
+    for(const e of byG[g])h+=`<button class="libitem" data-act="lib-edit" data-name="${esc(e.n)}"><div><div class="nm">${esc(e.n)}</div><div class="tags">${e.t?'🎯 '+esc(e.t):''}${e.s?' · + '+esc(e.s):''}${e.rest?' · ⏱ '+e.rest+'с':''}</div></div><svg class="ic chev" style="width:15px;height:15px"><use href="#i-chev"/></svg></button>`;
+    h+='</div></div>'}
+  return h}
+
+/* ================= SETTINGS ================= */
+function renderSettings(){
+  let h=`<div class="card"><h3><svg class="ic"><use href="#i-moon"/></svg>Стиль интерфейса</h3><div class="themegrid">${THEMES.map(t=>`<button class="themecard ${S.cfg.th===t.id?'on':''}" data-act="th-pick" data-id="${t.id}"><div class="prev" style="background:${t.bg}"><i style="left:8px;top:8px;width:26px;height:8px;background:${t.s}"></i><i style="left:8px;top:22px;width:38px;height:14px;background:${t.a}"></i><i style="right:8px;top:22px;width:12px;height:14px;background:${t.b}"></i></div><div class="tn">${t.n}</div></button>`).join('')}</div>`;
+  if(S.cfg.th==='cu')h+=`<div class="row" style="margin-top:12px"><div class="sp"><div class="tiny" style="margin-bottom:4px">Акцент</div><input type="color" id="cu-a" value="${esc(S.cfg.a)}"></div><div class="sp"><div class="tiny" style="margin-bottom:4px">Интенсивность</div><input type="color" id="cu-i" value="${esc(S.cfg.i)}"></div></div>`;
+  h+=`<div class="divider"></div><div class="setrow-opt"><div class="ol"><b>Анимации</b><span>заметные, но не мешают</span></div><button class="switch ${S.cfg.anim?'on':''}" data-act="tg-anim"></button></div>
+  <div class="setrow-opt"><div class="ol"><b>Вибрация</b><span>подходы, рекорды, таймер</span></div><button class="switch ${S.cfg.vib?'on':''}" data-act="tg-vib"></button></div></div>`;
+  // timer
+  h+=`<div class="card"><h3><svg class="ic"><use href="#i-timer"/></svg>Таймер отдыха</h3>
+  <div class="setrow-opt"><div class="ol"><b>Автозапуск после подхода</b><span>в суперсете — после последнего упражнения</span></div><button class="switch ${S.cfg.autoTimer?'on':''}" data-act="tg-at"></button></div>
+  <label>Отдых по умолчанию</label><select id="rest-def">${[45,60,90,120,150,180,240,300,420].map(v=>`<option value="${v}" ${S.cfg.rest===v?'selected':''}>${v>=60?(v/60)+' мин'+(v%60?' '+(v%60)+' с':''):v+' с'}</option>`).join('')}</select>
+  <label>Быстрое меню таймера</label><div class="chips">${S.cfg.tb.map(v=>`<span class="chip mini">${v>=60?(Math.floor(v/60)+':'+String(v%60).padStart(2,'0')):v+'с'} <span class="x" data-act="tb-del" data-v="${v}">✕</span></span>`).join('')}</div>
+  <div class="row" style="margin-top:9px"><input id="tb-new" class="mono" inputmode="numeric" placeholder="секунды, напр. 240" style="flex:1"><button class="btn sec sm" data-act="tb-add">Добавить</button></div>
+  <div class="chips" style="margin-top:8px">${[30,60,90,120,180,300,420,600].filter(v=>!S.cfg.tb.includes(v)).map(v=>`<button class="chip mini" data-act="tb-quick" data-v="${v}">+ ${v>=60?(v/60)+' мин':v+' с'}</button>`).join('')}</div></div>`;
+  // retention
+  const arcN=Object.keys(S.arc).length;
+  h+=`<div class="card"><h3><svg class="ic"><use href="#i-heart"/></svg>Хранение самочувствия</h3>
+  <div class="sub" style="margin-bottom:10px">Автоудаление старых записей: сон, энергия, самочувствие, боль, комментарии и заметки дней. <b style="color:var(--tx)">Тренировки, веса и рекорды не удаляются никогда.</b> Перед удалением запись уходит в компактный архив (до ${ARC_CAP} записей).</div>
+  <label>Удалять старше</label><select id="ret-sel">${RETS.map(r=>`<option value="${r[0]}" ${String(S.cfg.ret)===String(r[0])?'selected':''}>${r[1]}</option>`).join('')}</select>
+  <div class="row" style="margin-top:12px"><button class="btn sec sm" data-act="arc-view"><svg class="ic" style="width:14px;height:14px"><use href="#i-book"/></svg>Архив (${arcN})</button><div class="sp"></div><button class="btn danger sm" data-act="purge-now">Очистить сейчас</button></div></div>`;
+  // program templates
+  h+=`<div class="card"><h3><svg class="ic"><use href="#i-cal"/></svg>Шаблоны программы</h3><div class="sub" style="margin-bottom:10px">Заменят только список дней. История тренировок не тронется.</div><div class="row"><button class="btn sec sm" data-act="tpl" data-n="3">3 дня</button><button class="btn sec sm" data-act="tpl" data-n="4">4 дня</button></div></div>`;
+  // data
+  const mirrorTs=Number(localStorage.getItem(NS+'_mirror_ts')||0);
+  h+=`<div class="card"><h3><svg class="ic"><use href="#i-cloud"/></svg>Данные и облако</h3>
+  <div class="listrow"><span class="gdot" style="background:${UI.cloud==='ok'?cssVar('--ok'):UI.cloud==='err'?cssVar('--bad'):cssVar('--tx3')}"></span><span class="sp">${CS?(UI.cloud==='ok'?'Сохранено в облаке Telegram':UI.cloud==='err'?'Ошибка сохранения — есть копия на телефоне':UI.cloud==='saving'?'Сохраняю…':'Облако подключено'):'Облако недоступно — режим телефона'}</span>${UI.lastSave?`<span class="tiny">${new Date(UI.lastSave).toLocaleTimeString('ru').slice(0,5)}</span>`:''}</div>
+  <div class="listrow"><span class="tiny">Тренировок: ${Object.keys(S.days).length} · упражнений: ${S.lib.length} · старых ключей не тронуто: ${UI.legacyKeys}</span></div>
+  ${mirrorTs?`<div class="listrow"><span class="tiny">Копия на телефоне: ${new Date(mirrorTs).toLocaleString('ru')}</span></div>`:''}
+  <div class="row" style="margin-top:10px;flex-wrap:wrap"><button class="btn sm" data-act="export-open"><svg class="ic" style="width:15px;height:15px"><use href="#i-down"/></svg>Экспорт</button><button class="btn sec sm" data-act="import-open"><svg class="ic" style="width:15px;height:15px"><use href="#i-up"/></svg>Импорт</button><button class="btn sec sm" data-act="cloud-retry"><svg class="ic" style="width:15px;height:15px"><use href="#i-cloud"/></svg>Сохранить сейчас</button>${mirrorTs?`<button class="btn ghost sm" data-act="mirror-restore">Восстановить копию телефона</button>`:''}</div>
+  <div class="tiny" style="margin-top:10px">Данные пишутся в два поколения ключей: пока новое пишется, предыдущее остаётся целым. Ключи старых версий приложение не удаляет.</div></div>`;
+  h+=`<div class="card"><div class="tiny">Железный дневник v6 · личный проект · бесплатно и надолго · тот же бот Telegram</div></div>`;
+  return h}
+
+/* ================= ACTIONS ================= */
+const ACT={
+ 'tab':el=>switchTab(el.dataset.tab),
+ 'theme-cycle':()=>cycleTheme(),
+ 'sheet-close':()=>closeSheet(),
+ 'cloud-info':()=>{openSheet(`<h2><svg class="ic"><use href="#i-cloud"/></svg>Облако Telegram</h2><div class="desc">${CS?'Подключено. Статус: '+(UI.cloud==='ok'?'всё сохранено ✓':UI.cloud==='err'?'последняя попытка не удалась — копия на телефоне есть':'сохраняю…'):'Недоступно. Открой приложение через Telegram — данные будут писаться в облако этого же бота.'}<br><br>Тренировок: <b>${Object.keys(S.days).length}</b> · упражнений: <b>${S.lib.length}</b><br>Старые ключи прежних версий не тронуты: <b>${UI.legacyKeys}</b></div><div class="actions"><button class="btn sec" data-act="sheet-close">Закрыть</button><button class="btn" data-act="cloud-retry">Сохранить сейчас</button></div>`)},
+ 'cloud-retry':()=>{closeSheet();scheduleSave(50);toast('ok','cloud','Сохраняю…',1600)},
+ 'goto-diary':()=>{UI.diaryDate=today();UI.diaryAuto=1;switchTab('diary')},
+ 'cal-day':el=>{UI.diaryDate=el.dataset.d;UI.diaryAuto=el.dataset.d===today()?1:0;switchTab('diary')},
+ /* wellbeing */
+ 'wb-scale':el=>{const d=UI.wbDraft=UI.wbDraft||{...(S.wb[today()]||{})};const k=el.dataset.k,v=Number(el.dataset.v);d[k]=d[k]===v?0:v;vib('sel');rerender()},
+ 'wb-edit':()=>{UI.wbEdit=true;UI.wbDraft={...(S.wb[today()]||{})};rerender()},
+ 'wb-dc-del':el=>{const d=UI.wbDraft=UI.wbDraft||{...(S.wb[today()]||{})};d.dc=(d.dc||[]).filter((_,i)=>i!==Number(el.dataset.i));rerender()},
+ 'wb-dc-open':()=>{const cur=(UI.wbDraft&&UI.wbDraft.dc)||[];
+   openSheet(`<h2><svg class="ic"><use href="#i-heart"/></svg>Где дискомфорт?</h2><div class="desc">Выбери зону и силу от 1 до 10. Можно несколько.</div><div class="chips" id="dc-parts">${PARTS.map(p=>`<button class="chip ${cur.some(x=>x.p===p)?'on':''}" data-act="dc-part" data-p="${esc(p)}">${esc(p)}</button>`).join('')}</div><label>Сила: <b id="dc-vlbl" class="mono">3</b>/10</label><input type="range" id="dc-range" min="1" max="10" value="3"><div class="actions"><button class="btn sec" data-act="sheet-close">Отмена</button><button class="btn" id="dc-ok">Добавить</button></div>`);
+   $('#dc-range').oninput=e=>$('#dc-vlbl').textContent=e.target.value;
+   $('#dc-ok').onclick=()=>{const sel=$$('#dc-parts .chip.on').map(c=>c.dataset.p);const v=Number($('#dc-range').value);if(!sel.length){toast('warn','warn','Выбери хотя бы одну зону');return}
+     const d=UI.wbDraft=UI.wbDraft||{...(S.wb[today()]||{})};d.dc=d.dc||[];for(const p of sel){const ex=d.dc.find(x=>x.p===p);if(ex)ex.v=v;else d.dc.push({p,v})}
+     closeSheet();rerender()}},
+ 'dc-part':el=>{el.classList.toggle('on');vib('sel')},
+ 'wb-save':()=>{const d=UI.wbDraft||{};const c=$('#wb-c')?$('#wb-c').value.trim():(d.c||'');
+   const rec={};if(d.sl)rec.sl=d.sl;if(d.en)rec.en=d.en;if(d.st)rec.st=d.st;if(d.dc&&d.dc.length)rec.dc=d.dc;if(c)rec.c=c;
+   if(!Object.keys(rec).length){toast('warn','warn','Отметь хоть что-то: сон, энергию или самочувствие');return}
+   S.wb[today()]=rec;UI.wbEdit=false;UI.wbDraft=null;vib('ok');scheduleSave();rerender();toast('ok','heart','Состояние записано')},
+ /* quick start */
+ 'quick-next':()=>{const p=S.prog[S.cfg.nx];if(!p)return;startProgramDay(S.cfg.nx)},
+ 'prog-start':el=>startProgramDay(Number(el.dataset.i)),
+ 'quick-repeat':()=>{const ds=Object.keys(S.days).filter(d=>d<today()&&S.days[d].length).sort();if(!ds.length){toast('warn','warn','Нет прошлых тренировок');return}
+   const d=ds[ds.length-1];const src=S.days[d];
+   confirmSheet('Повторить тренировку?',`Копия тренировки от <b>${fdateFull(d)}</b>: ${src.length} ${plural(src.length,'упражнение','упражнения','упражнений')}. Веса и повторы начнутся пустыми — с подсказками прошлого раза.`,'Повторить',()=>{
+     const t=today();S.days[t]=S.days[t]||[];let added=0;for(const e of src){if(!S.days[t].some(x=>norm(x.n)===norm(e.n))){S.days[t].push({n:e.s?e.n:e.n,s:[],...(e.ss?{ss:e.ss}:{})});added++}}
+     delete S.fin[t];scheduleSave();UI.diaryDate=t;switchTab('diary');toast('ok','undo',`Добавлено ${added} упр. из прошлой тренировки`)})},
+ 'quick-empty':()=>{const t=today();if(!S.days[t])S.days[t]=[];delete S.fin[t];scheduleSave();UI.diaryDate=t;UI.diaryAuto=1;switchTab('diary')},
+ /* program */
+ 'prog-toggle':()=>{UI.progEdit=!UI.progEdit;rerender()},
+ 'prog-add':()=>{if(S.prog.length>=7)return;confirmSheet('Добавить день программы?','Появится новый пустой день. Его можно переименовать и наполнить упражнениями.','Добавить',()=>{S.prog.push({name:'День '+(S.prog.length+1),ex:[]});scheduleSave();rerender();toast('ok','plus','День добавлен')})},
+ 'prog-del':el=>{const i=Number(el.dataset.i);const p=S.prog[i];confirmSheet('Удалить день?',`«<b>${esc(p.name)}</b>» исчезнет из программы. История тренировок останется.`,'Удалить',()=>{S.prog.splice(i,1);S.cfg.nx=clamp(S.cfg.nx,0,Math.max(0,S.prog.length-1));scheduleSave();rerender()},true)},
+ 'prog-up':el=>{const i=Number(el.dataset.i);if(i>0){[S.prog[i-1],S.prog[i]]=[S.prog[i],S.prog[i-1]];scheduleSave();rerender()}},
+ 'prog-down':el=>{const i=Number(el.dataset.i);if(i<S.prog.length-1){[S.prog[i+1],S.prog[i]]=[S.prog[i],S.prog[i+1]];scheduleSave();rerender()}},
+ 'prog-edit':el=>progEditSheet(Number(el.dataset.i)),
+ 'tpl':el=>{const n=Number(el.dataset.n);confirmSheet('Применить шаблон?',`Текущие дни программы заменятся шаблоном на <b>${n} ${plural(n,'день','дня','дней')}</b>. История и веса не тронутся.`,'Применить',()=>{S.prog=JSON.parse(JSON.stringify(n===3?TPL3:TPL4));S.cfg.nx=0;scheduleSave();rerender();toast('ok','cal','Шаблон применён')})},
+ /* diary nav */
+ 'd-prev':()=>{UI.diaryDate=shiftDay(UI.diaryDate,-1);UI.diaryAuto=0;rerender()},
+ 'd-next':()=>{if(UI.diaryDate<today()){UI.diaryDate=shiftDay(UI.diaryDate,1);UI.diaryAuto=UI.diaryDate===today()?1:0;rerender()}},
+ 'd-today':()=>{UI.diaryDate=today();UI.diaryAuto=1;rerender()},
+ 'mk-edit':()=>{const d=UI.diaryDate;const mk=S.mk[d]||{};
+   openSheet(`<h2><svg class="ic"><use href="#i-note"/></svg>Заметка · ${fdate(d)}</h2><label>Комментарий к дню</label><textarea id="mk-t" placeholder="Как прошла тренировка, события…">${esc(mk.t||'')}</textarea><div class="setrow-opt" style="margin-top:10px"><div class="ol"><b>Важная ⭐</b><span>пометить день звездой</span></div><button class="switch ${mk.i?'on':''}" id="mk-i"></button></div><div class="actions"><button class="btn sec" data-act="sheet-close">Отмена</button><button class="btn" id="mk-ok">Сохранить</button></div>`);
+   $('#mk-i').onclick=e=>e.currentTarget.classList.toggle('on');
+   $('#mk-ok').onclick=()=>{const t=$('#mk-t').value.trim();const i=$('#mk-i').classList.contains('on')?1:0;if(!t&&!i)delete S.mk[d];else S.mk[d]={i,t};closeSheet();scheduleSave();rerender();toast('ok','note','Заметка сохранена')}},
+ /* sets */
+ 'set-check':el=>checkSet(Number(el.dataset.i),Number(el.dataset.j)),
+ 'set-edit':el=>{const i=Number(el.dataset.i),j=Number(el.dataset.j);const e=S.days[UI.diaryDate][i];const s=e.s[j];
+   const row=$('#sr-'+i+'-'+j);if(!row)return;const last=lastSession(e.n,UI.diaryDate);
+   row.outerHTML=`<div class="setrow" id="sr-${i}-${j}"><span class="num">${j+1}</span><input class="w mono" id="w-${i}-${j}" inputmode="decimal" value="${fmtKg(s[0])}"><span class="times">×</span><input class="r mono" id="r-${i}-${j}" inputmode="numeric" value="${s[1]}"><button class="checkbtn" data-act="set-save" data-i="${i}" data-j="${j}"><svg class="ic"><use href="#i-check"/></svg></button></div>`;
+   $('#w-'+i+'-'+j).focus()},
+ 'set-save':el=>{const i=Number(el.dataset.i),j=Number(el.dataset.j);const d=UI.diaryDate;const e=S.days[d][i];
+   const w=num($('#w-'+i+'-'+j).value),r=Math.round(num($('#r-'+i+'-'+j).value));
+   if(r<1){toast('warn','warn','Повторы должны быть хотя бы 1');return}
+   const prevBest=bestOf(e.n,{d,i,j});e.s[j]=[w,r];
+   if(prevBest.w>0&&w>prevBest.w)celebrateRecord(e.n,w,r,d);
+   UI.anchor='ex-'+i;scheduleSave();rerender();vib('light')},
+ 'set-del':el=>{const i=Number(el.dataset.i),j=Number(el.dataset.j);const d=UI.diaryDate;const e=S.days[d][i];const removed=e.s[j];
+   e.s.splice(j,1);UI.anchor='ex-'+i;scheduleSave();rerender();
+   toast('warn','trash','Подход удалён',4000,()=>{e.s.splice(j,0,removed);scheduleSave();rerender()})},
+ 'set-add':el=>{const i=Number(el.dataset.i);const e=S.days[UI.diaryDate][i];const last=e.s[e.s.length-1];
+   e.s.push(last?[last[0],last[1]]:[0,8]);UI.anchor='ex-'+i;scheduleSave();rerender();
+   setTimeout(()=>{const j=e.s.length-1;const inp=$('#w-'+i+'-'+j);if(inp)inp.focus()},60)},
+ 'chip-w':el=>chipDelta(Number(el.dataset.i),'w',Number(el.dataset.d)),
+ 'chip-r':el=>chipDelta(Number(el.dataset.i),'r',Number(el.dataset.d)),
+ /* exercise menu */
+ 'ex-menu':el=>exMenuSheet(Number(el.dataset.i)),
+ 'ex-remove':el=>{const i=Number(el.dataset.i);const d=UI.diaryDate;const removed=S.days[d][i];closeSheet();
+   S.days[d].splice(i,1);scheduleSave();rerender();
+   toast('warn','trash',`«${removed.n}» убрано`,5000,()=>{S.days[d].splice(Math.min(i,S.days[d].length),0,removed);scheduleSave();rerender()})},
+ 'ex-up':el=>{const i=Number(el.dataset.i);const arr=S.days[UI.diaryDate];if(i>0){[arr[i-1],arr[i]]=[arr[i],arr[i-1]];UI.anchor='ex-'+(i-1);closeSheet();scheduleSave();rerender()}},
+ 'ex-down':el=>{const i=Number(el.dataset.i);const arr=S.days[UI.diaryDate];if(i<arr.length-1){[arr[i+1],arr[i]]=[arr[i],arr[i+1]];UI.anchor='ex-'+(i+1);closeSheet();scheduleSave();rerender()}},
+ 'ex-replace-open':el=>{const i=Number(el.dataset.i);const e=S.days[UI.diaryDate][i];const g=(libBy(e.n)||{}).g;
+   const alts=S.lib.filter(x=>x.g===g&&norm(x.n)!==norm(e.n));
+   openSheet(`<h2><svg class="ic"><use href="#i-swap"/></svg>Заменить упражнение</h2><div class="desc">«${esc(e.n)}» → альтернативы из группы <b>${esc(g||'Без группы')}</b>. Подходы перенесутся как есть.</div><div class="optlist">${alts.map(a=>`<button data-act="ex-replace-pick" data-i="${i}" data-name="${esc(a.n)}">${esc(a.n)}<span class="tiny">${esc(a.t||'')}</span></button>`).join('')||'<div class="tiny">В этой группе нет других упражнений. Добавь их в «Базе».</div>'}</div>`+acHTML('replace','Или найди любое упражнение…')+`<input type="hidden" id="rep-i" value="${i}">`)},
+ 'ex-replace-pick':el=>{const i=Number(el.dataset.i??$('#rep-i')?.value);const d=UI.diaryDate;const e=S.days[d][i];const old=e.n;e.n=el.dataset.name;
+   closeSheet();UI.anchor='ex-'+i;scheduleSave();rerender();toast('ok','swap',`«${old}» → «${e.n}»`,4000,()=>{e.n=old;scheduleSave();rerender()})},
+ 'ex-rest':el=>{const i=Number(el.dataset.i);const e=S.days[UI.diaryDate][i];const lib=libBy(e.n);if(!lib)return;
+   openSheet(`<h2><svg class="ic"><use href="#i-timer"/></svg>Отдых · ${esc(e.n)}</h2><div class="desc">Своё время отдыха для этого упражнения. 0 — как по умолчанию (${S.cfg.rest} с).</div><div class="chips">${[0,45,60,90,120,150,180,240,300,420].map(v=>`<button class="chip ${(lib.rest||0)===v?'on':''}" data-act="ex-rest-set" data-i="${i}" data-v="${v}">${v===0?'По умолчанию':v>=60?(v/60)+' мин'+(v%60?' '+(v%60)+'с':''):v+' с'}</button>`).join('')}</div>`)},
+ 'ex-rest-set':el=>{const i=Number(el.dataset.i);const e=S.days[UI.diaryDate][i];const lib=libBy(e.n);lib.rest=Number(el.dataset.v);closeSheet();scheduleSave();toast('ok','timer','Отдых обновлён')},
+ /* superset */
+ 'ss-mode':()=>{const exs=S.days[UI.diaryDate]||[];if(exs.length<2){toast('warn','warn','Нужно минимум 2 упражнения');return}UI.ssMode=true;UI.ssSel=[];rerender()},
+ 'ss-toggle':el=>{const i=Number(el.dataset.i);const k=UI.ssSel.indexOf(i);if(k>=0)UI.ssSel.splice(k,1);else UI.ssSel.push(i);vib('sel');rerender()},
+ 'ss-cancel':()=>{UI.ssMode=false;UI.ssSel=[];rerender()},
+ 'ss-make':()=>{if(UI.ssSel.length<2)return;const gid='s'+uid();const arr=S.days[UI.diaryDate];
+   const sel=[...UI.ssSel].sort((a,b)=>a-b);const picked=sel.map(i=>arr[i]);
+   // сдвигаем выбранные подряд к позиции первого
+   const first=sel[0];const rest=arr.filter((_,i)=>!UI.ssSel.includes(i));
+   const out=[...rest.slice(0,first),...picked.map(e=>({...e,ss:gid})),...rest.slice(first)];
+   S.days[UI.diaryDate]=out;UI.ssMode=false;UI.ssSel=[];scheduleSave();rerender();vib('ok');toast('ok','link',`Суперсет из ${picked.length} упражнений собран`)},
+ 'ss-clear':el=>{const g=el.dataset.g;for(const e of S.days[UI.diaryDate])if(e.ss===g)delete e.ss;scheduleSave();rerender();toast('ok','link','Суперсет разъединён')},
+ /* finish */
+ 'finish-open':()=>{const d=UI.diaryDate;const exs=S.days[d]||[];const recs=S.rh.filter(r=>r.d===d);const wb=S.wb[d];
+   openSheet(`<h2><svg class="ic"><use href="#i-cup"/></svg>Завершить тренировку?</h2><div class="desc">${fdateFull(d)}</div>
+   <div class="statgrid"><div class="stat"><div class="v mono">${exs.length}</div><div class="k">упражнений</div></div><div class="stat"><div class="v mono">${setsCount(d)}</div><div class="k">подходов</div></div><div class="stat"><div class="v mono">${fmtTon(tonnage(d))}</div><div class="k">тоннаж</div></div><div class="stat"><div class="v mono" style="color:#e3b458">${recs.length} 🏆</div><div class="k">рекордов</div></div></div>
+   ${recs.length?`<div style="margin-top:10px">${recs.map(r=>`<div class="listrow">🏆<span class="sp">${esc(r.n)}</span><span class="mono">${fmtKg(r.w)} кг</span></div>`).join('')}</div>`:''}
+   ${wb?'':'<div class="warnbox" style="margin-top:10px"><svg class="ic"><use href="#i-heart"/></svg>Состояние сегодня не записано — можно на вкладке «Сегодня».</div>'}
+   <div class="actions"><button class="btn sec" data-act="sheet-close">Ещё тренируюсь</button><button class="btn" data-act="finish-confirm">Завершить ✓</button></div>`)},
+ 'finish-confirm':()=>{const d=UI.diaryDate;S.fin[d]=1;closeSheet();scheduleSave();confetti();vib('ok');rerender();toast('ok','cup','Тренировка завершена. Красавчик!')},
+ 'reopen':()=>{delete S.fin[UI.diaryDate];scheduleSave();rerender()},
+ /* autocomplete */
+ 'ac-pick':el=>acPick(el.dataset.ctx,el.dataset.name),
+ 'ac-create':el=>{const name=el.dataset.name.trim();if(!name)return;const ctx=el.dataset.ctx;
+   const exist=S.lib.find(e=>norm(e.n)===norm(name));if(exist){acPick(ctx,exist.n);return}
+   const fz=S.lib.map(e=>[lev(norm(name),norm(e.n)),e]).filter(x=>x[0]<=2&&name.length>=4).sort((a,b)=>a[0]-b[0])[0];
+   if(fz){confirmSheet('Похожее упражнение',`Ты ввёл «<b>${esc(name)}</b>». Очень похоже на «<b>${esc(fz[1].n)}</b>». Это одно и то же?`,`Да, взять «${fz[1].n}»`,()=>acPick(ctx,fz[1].n));
+     setTimeout(()=>{const a=$('.sheet .actions');if(a){const b=document.createElement('button');b.className='btn ghost';b.textContent='Нет, создать новое';b.onclick=()=>{closeSheet();createAndPick(ctx,name)};a.prepend(b)}},0);return}
+   createAndPick(ctx,name)},
+ /* library */
+ 'grp-toggle':el=>{const g=el.dataset.g;UI.libOpen[g]=UI.libOpen[g]===false?true:false;rerender()},
+ 'lib-add':()=>libEditSheet(null),
+ 'lib-edit':el=>libEditSheet(el.dataset.name),
+ /* stats */
+ 'per':el=>{S.cfg.sp=el.dataset.p;scheduleSave();rerender()},
+ 'bw-add-open':()=>bwSheet(),
+ 'bw-del':el=>{const d=el.dataset.d;const v=S.bw[d];confirmSheet('Удалить запись веса?',`${fdateFull(d)} · <b>${fmtKg(v)} кг</b>`,'Удалить',()=>{delete S.bw[d];scheduleSave();rerender();toast('warn','trash','Запись удалена',4000,()=>{S.bw[d]=v;scheduleSave();rerender()})},true)},
+ 'bw-quick-save':()=>{const v=num($('#bw-quick').value);if(v<20||v>300){toast('warn','warn','Похоже на опечатку. Вес в кг, например 57,5');return}S.bw[today()]=v;scheduleSave();vib('ok');rerender();toast('ok','scale','Вес записан')},
+ /* settings */
+ 'th-pick':el=>{S.cfg.th=el.dataset.id;applyTheme(true);vib('sel');rerender()},
+ 'tg-anim':()=>{S.cfg.anim=S.cfg.anim?0:1;applyTheme(true);rerender()},
+ 'tg-vib':()=>{S.cfg.vib=S.cfg.vib?0:1;scheduleSave();rerender();vib('ok')},
+ 'tg-at':()=>{S.cfg.autoTimer=S.cfg.autoTimer?0:1;scheduleSave();rerender()},
+ 'tb-del':el=>{const v=Number(el.dataset.v);if(S.cfg.tb.length<=1){toast('warn','warn','Оставь хотя бы одну кнопку');return}S.cfg.tb=S.cfg.tb.filter(x=>x!==v);scheduleSave();rerender();renderTimerBar()},
+ 'tb-add':()=>{const v=Math.round(num($('#tb-new').value));if(v<5||v>3600){toast('warn','warn','От 5 до 3600 секунд');return}if(!S.cfg.tb.includes(v))S.cfg.tb.push(v);S.cfg.tb.sort((a,b)=>a-b);scheduleSave();rerender();renderTimerBar();toast('ok','timer','Добавлено в быстрое меню')},
+ 'tb-quick':el=>{const v=Number(el.dataset.v);if(!S.cfg.tb.includes(v))S.cfg.tb.push(v);S.cfg.tb.sort((a,b)=>a-b);scheduleSave();rerender();renderTimerBar()},
+ 'purge-now':()=>{if(S.cfg.ret==='never'){toast('warn','warn','Сначала выбери срок хранения');return}
+   confirmSheet('Очистить старые заметки?',`Заметки о самочувствии старше «<b>${RETS.find(r=>String(r[0])===String(S.cfg.ret))[1]}</b>» уйдут в архив. Тренировки и рекорды останутся.`,'Очистить',()=>{const n=purgeWellbeing();scheduleSave();rerender();toast(n?'ok':'warn','trash',n?`${n} записей в архиве`:'Нечего очищать')},true)},
+ 'arc-view':()=>{const ks=Object.keys(S.arc).sort().reverse();
+   openSheet(`<h2><svg class="ic"><use href="#i-book"/></svg>Архив самочувствия</h2><div class="desc">Компактные записи, удалённые автоочисткой. Хранятся последние ${ARC_CAP}. Входят в экспорт.</div>${ks.length?ks.map(d=>{const a=S.arc[d];let s='';if(a.w){const L={sl:'сон',en:'энергия',st:'самочувствие'};s+=Object.keys(L).filter(k=>a.w[k]).map(k=>L[k]+' '+a.w[k]+'/5').join(', ');if(a.w.dc)s+=(s?' · ':'')+a.w.dc.map(x=>x.p+' '+x.v+'/10').join(', ');if(a.w.c)s+=(s?' · ':'')+'«'+a.w.c+'»'}if(a.m&&a.m.t)s+=(s?' · ':'')+'заметка: «'+a.m.t+'»';
+     return `<div class="listrow"><span class="tiny" style="flex:none">${fdate(d)}</span><span class="sp sub" style="font-size:12px">${esc(s||'—')}</span></div>`}).join(''):'<div class="tiny">Архив пока пуст.</div>'}`)},
+ 'export-open':()=>exportSheet(),
+ 'import-open':()=>importSheet(),
+ 'mirror-restore':()=>{let data;try{data=JSON.parse(localStorage.getItem(NS+'_mirror')||'null')}catch(e){}
+   if(!data){toast('err','warn','Копия не найдена');return}
+   confirmSheet('Восстановить копию телефона?',`Копия от <b>${new Date(Number(localStorage.getItem(NS+'_mirror_ts')||0)).toLocaleString('ru')}</b>: ${Object.keys(data.days||{}).length} тренировок. Заменит текущие данные (облачная копия предыдущего поколения останется).`,'Восстановить',()=>{applyImport(data);toast('ok','cloud','Копия восстановлена')},true)},
+ /* timer */
+ 't-plus':()=>timerPlus(15),
+ 't-skip':()=>timerStop(true),
+ 't-preset':el=>timerStart(Number(el.dataset.v),''),
+};
+function chipDelta(i,kind,delta){
+  const e=S.days[UI.diaryDate][i];const j=e.s.length;const wIn=$('#w-'+i+'-'+j),rIn=$('#r-'+i+'-'+j);if(!wIn)return;
+  let w=num(wIn.value)||(e.s.length?e.s[e.s.length-1][0]:0);let r=Math.round(num(rIn.value))||(e.s.length?e.s[e.s.length-1][1]:0);
+  if(kind==='w')w=Math.max(0,Math.round((w+delta)*100)/100);else r=Math.max(1,r+delta);
+  wIn.value=fmtKg(w);rIn.value=r;vib('sel')}
+function checkSet(i,j){
+  const d=UI.diaryDate;const e=S.days[d][i];const wIn=$('#w-'+i+'-'+j),rIn=$('#r-'+i+'-'+j);
+  let w=num(wIn.value),r=Math.round(num(rIn.value));
+  if(!w&&!r){ // один тап — копируем прошлый
+    if(e.s.length){w=e.s[e.s.length-1][0];r=e.s[e.s.length-1][1]}
+    else{const last=lastSession(e.n,d);if(last&&last.ex.s[0]){w=last.ex.s[0][0];r=last.ex.s[0][1]}}
+    if(!r){wIn.focus();toast('warn','warn','Введи вес и повторы — дальше ✓ скопирует их');return}}
+  if(r<1){toast('warn','warn','Повторы должны быть хотя бы 1');rIn.focus();return}
+  const prevBest=bestOf(e.n);
+  e.s.push([w,r]);
+  const isRec=prevBest.w>0&&w>prevBest.w;
+  if(isRec)celebrateRecord(e.n,w,r,d);else vib('light');
+  // таймер: в суперсете — только после последнего упражнения группы
+  let startT=S.cfg.autoTimer;
+  if(e.ss){const arr=S.days[d];const idx=arr.indexOf(e);let lastInGroup=idx;for(let k=idx+1;k<arr.length;k++)if(arr[k].ss===e.ss)lastInGroup=k;startT=startT&&idx===lastInGroup}
+  if(startT){const lib=libBy(e.n);timerStart((lib&&lib.rest)||S.cfg.rest,e.n)}
+  UI.anchor='ex-'+i;scheduleSave();rerender();
+  const row=$('#sr-'+i+'-'+j);if(row){row.classList.add('flash','pop')}
+}
+function celebrateRecord(n,w,r,d){S.rh.push({n,w,r,d});if(S.rh.length>RH_CAP)S.rh=S.rh.slice(-RH_CAP);
+  confetti();vib('ok');toast('rec','cup',`Новый рекорд: ${n} — ${fmtKg(w)} кг!`,4200)}
+function acPick(ctx,name){
+  hideACs();
+  if(ctx==='day'){const d=UI.diaryDate;S.days[d]=S.days[d]||[];const arr=S.days[d];
+    if(arr.some(e=>norm(e.n)===norm(name))){toast('warn','warn','Уже в тренировке');const i=arr.findIndex(e=>norm(e.n)===norm(name));UI.anchor='ex-'+i;rerender();return}
+    if(!libBy(name))S.lib.push({n:name,g:'',t:'',s:'',rest:0});
+    arr.push({n:libBy(name).n,s:[]});delete S.fin[d];UI.anchor='ex-'+(arr.length-1);scheduleSave();rerender();vib('light');
+    const inp=$('#ac-day');if(inp)inp.value=''}
+  else if(ctx==='prog'){const i=Number($('#pe-i').value);const p=S.prog[i];if(!p.ex.includes(name))p.ex.push(name);if(!libBy(name))S.lib.push({n:name,g:'',t:'',s:'',rest:0});
+    $('#pe-list').innerHTML=progExList(p);const inp=$('#ac-prog');if(inp)inp.value='';scheduleSave();vib('light')}
+  else if(ctx==='stat'){UI.statEx=name;rerender()}
+  else if(ctx==='replace'){const i=Number($('#rep-i').value);const e=S.days[UI.diaryDate][i];const old=e.n;if(!libBy(name))S.lib.push({n:name,g:'',t:'',s:'',rest:0});e.n=libBy(name).n;closeSheet();UI.anchor='ex-'+i;scheduleSave();rerender();toast('ok','swap',`«${old}» → «${e.n}»`)}
+}
+function createAndPick(ctx,name){
+  openSheet(`<h2><svg class="ic"><use href="#i-plus"/></svg>Новое упражнение</h2><div class="desc">«<b>${esc(name)}</b>» — укажи группу мышц (можно потом в «Базе»).</div><label>Группа</label><div class="chips" id="ng-chips">${[...GORDER,''].map(g=>`<button class="chip" data-g="${esc(g)}">${esc(g||'Без группы')}</button>`).join('')}</div><label>Целевая мышца</label><input id="ng-t" placeholder="например Бицепс"><label>Синергисты</label><input id="ng-s" placeholder="например Предплечье"><div class="actions"><button class="btn sec" data-act="sheet-close">Отмена</button><button class="btn" id="ng-ok">Создать</button></div>`);
+  let g='';$$('#ng-chips .chip').forEach(c=>c.onclick=()=>{$$('#ng-chips .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');g=c.dataset.g});
+  $('#ng-ok').onclick=()=>{S.lib.push({n:name,g,t:$('#ng-t').value.trim(),s:$('#ng-s').value.trim(),rest:0});closeSheet();acPick(ctx,name);scheduleSave();toast('ok','plus','Упражнение создано')}}
+function exMenuSheet(i){const e=S.days[UI.diaryDate][i];
+  openSheet(`<h2><svg class="ic"><use href="#i-dots"/></svg>${esc(e.n)}</h2><div class="optlist">
+  <button data-act="ex-replace-open" data-i="${i}"><svg class="ic" style="color:var(--info)"><use href="#i-swap"/></svg>Заменить упражнение</button>
+  <button data-act="ex-rest" data-i="${i}"><svg class="ic" style="color:var(--acc)"><use href="#i-timer"/></svg>Свой отдых<span class="tiny">${(libBy(e.n)||{}).rest||S.cfg.rest} с</span></button>
+  <button data-act="ex-up" data-i="${i}"><svg class="ic"><use href="#i-arr-up"/></svg>Выше в списке</button>
+  <button data-act="ex-down" data-i="${i}"><svg class="ic"><use href="#i-arr-dn"/></svg>Ниже в списке</button>
+  <button data-act="ex-remove" data-i="${i}" style="color:var(--bad)"><svg class="ic"><use href="#i-trash"/></svg>Убрать из тренировки</button></div>`)}
+function progEditSheet(i){const p=S.prog[i];
+  openSheet(`<h2><svg class="ic"><use href="#i-cal"/></svg>День программы</h2><input type="hidden" id="pe-i" value="${i}"><label>Название дня</label><input id="pe-name" value="${esc(p.name)}"><label>Упражнения (${p.ex.length})</label><div id="pe-list">${progExList(p)}</div><label>Добавить упражнение</label>${acHTML('prog','Название или группа мышц…')}<div class="actions"><button class="btn sec" data-act="sheet-close">Закрыть</button><button class="btn" id="pe-ok">Сохранить</button></div>`);
+  $('#pe-ok').onclick=()=>{p.name=$('#pe-name').value.trim()||p.name;closeSheet();scheduleSave();rerender();toast('ok','cal','День сохранён')};
+  $('#pe-list').addEventListener('click',ev=>{const b=ev.target.closest('[data-pe-del]');if(b){p.ex.splice(Number(b.dataset.peDel),1);$('#pe-list').innerHTML=progExList(p);scheduleSave()}})}
+function progExList(p){return p.ex.map((n,k)=>`<div class="listrow"><span class="gdot" style="background:${gcolor((libBy(n)||{}).g)}"></span><span class="sp" style="font-weight:700;font-size:13px">${esc(n)}</span><button class="ibtn" data-pe-del="${k}"><svg class="ic"><use href="#i-x"/></svg></button></div>`).join('')||'<div class="tiny">Пока пусто — добавь ниже.</div>'}
+function startProgramDay(i){const p=S.prog[i];if(!p)return;const t=today();const cur=S.days[t]||[];
+  const missing=p.ex.filter(n=>!cur.some(e=>norm(e.n)===norm(n)));
+  confirmSheet('Начать день программы?',`<b>${esc(p.name)}</b> · ${p.ex.length} ${plural(p.ex.length,'упражнение','упражнения','упражнений')}.<br>${cur.length?`Сегодня уже есть ${cur.length} упр. — добавятся только недостающие (${missing.length}), записи не тронутся.`:'Упражнения добавятся с пустыми подходами и подсказками прошлого раза.'}${!p.ex.length?'<br><br>В этом дне пока нет упражнений — наполни его через ✎ в программе.':''}`,'Начать',()=>{
+    S.days[t]=cur;for(const n of missing){if(!libBy(n))S.lib.push({n,g:'',t:'',s:'',rest:0});S.days[t].push({n:libBy(n).n,s:[]})}
+    delete S.fin[t];S.cfg.nx=(i+1)%S.prog.length;scheduleSave();UI.diaryDate=t;UI.diaryAuto=1;switchTab('diary');vib('ok');toast('ok','play',`День «${p.name}» начат`)})}
+function libEditSheet(name){const e=name?libBy(name):null;
+  openSheet(`<h2><svg class="ic"><use href="#i-${e?'edit':'plus'}"/></svg>${e?'Упражнение':'Новое упражнение'}</h2>${e?'<div class="desc">Переименование обновит название и в истории, и в программе.</div>':''}
+  <label>Название</label><input id="le-n" value="${esc(e?e.n:'')}">
+  <label>Группа мышц</label><div class="chips" id="le-g">${[...groups().filter(g=>!GORDER.includes(g)),...GORDER,''].map((g,k,arr)=>arr.indexOf(g)===k?`<button class="chip ${e&&(e.g||'')===g?'on':''}" data-g="${esc(g)}">${esc(g||'Без группы')}</button>`:'').join('')}</div>
+  <input id="le-gnew" placeholder="…или новая группа" style="margin-top:8px">
+  <label>Целевые мышцы</label><input id="le-t" value="${esc(e?e.t:'')}" placeholder="например Широчайшие">
+  <label>Синергисты</label><input id="le-s" value="${esc(e?e.s:'')}" placeholder="например Бицепс">
+  <label>Свой отдых, сек (0 = по умолчанию)</label><input id="le-rest" class="mono" inputmode="numeric" value="${e?(e.rest||0):0}">
+  <div class="actions">${e?'<button class="btn danger" id="le-del">Удалить</button>':''}<button class="btn sec" data-act="sheet-close">Отмена</button><button class="btn" id="le-ok">Сохранить</button></div>`);
+  let g=e?(e.g||''):'';$$('#le-g .chip').forEach(c=>c.onclick=()=>{$$('#le-g .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');g=c.dataset.g;$('#le-gnew').value=''});
+  $('#le-ok').onclick=()=>{const n=$('#le-n').value.trim();if(!n){toast('warn','warn','Нужно название');return}
+    const gn=$('#le-gnew').value.trim();const gg=gn||g;
+    const dup=S.lib.find(x=>norm(x.n)===norm(n)&&x!==e);if(dup){toast('warn','warn','Такое упражнение уже есть: «'+dup.n+'»');return}
+    const data={n,g:gg,t:$('#le-t').value.trim(),s:$('#le-s').value.trim(),rest:clamp(Math.round(num($('#le-rest').value)),0,3600)};
+    if(e){const old=e.n;Object.assign(e,data);if(norm(old)!==norm(n)){for(const d in S.days)for(const x of S.days[d])if(norm(x.n)===norm(old))x.n=n;for(const p of S.prog)p.ex=p.ex.map(x=>norm(x)===norm(old)?n:x);for(const r of S.rh)if(norm(r.n)===norm(old))r.n=n;if(UI.statEx&&norm(UI.statEx)===norm(old))UI.statEx=n}}
+    else S.lib.push(data);
+    closeSheet();scheduleSave();rerender();toast('ok','check',e?'Сохранено (история обновлена)':'Упражнение добавлено')};
+  if(e)$('#le-del').onclick=()=>{closeSheet();confirmSheet('Удалить из базы?',`«<b>${esc(e.n)}</b>» исчезнет из библиотеки и программы. <b>История тренировок и рекорды останутся.</b>`,'Удалить',()=>{S.lib=S.lib.filter(x=>x!==e);for(const p of S.prog)p.ex=p.ex.filter(x=>norm(x)!==norm(e.n));scheduleSave();rerender()},true)}}
+function bwSheet(){openSheet(`<h2><svg class="ic"><use href="#i-scale"/></svg>Запись веса</h2><label>Дата</label><input type="date" id="bw-d" value="${today()}" max="${today()}"><label>Вес, кг</label><input id="bw-v" class="mono" inputmode="decimal" placeholder="57,5"><div class="actions"><button class="btn sec" data-act="sheet-close">Отмена</button><button class="btn" id="bw-ok">Записать</button></div>`);
+  $('#bw-ok').onclick=()=>{const d=$('#bw-d').value;const v=num($('#bw-v').value);if(!d||v<20||v>300){toast('warn','warn','Проверь дату и вес');return}S.bw[d]=v;closeSheet();scheduleSave();rerender();vib('ok');toast('ok','scale','Вес записан')}}
+function exportSheet(){const json=JSON.stringify(serialize());
+  openSheet(`<h2><svg class="ic"><use href="#i-down"/></svg>Экспорт резервной копии</h2><div class="desc">${Object.keys(S.days).length} тренировок · ${S.lib.length} упражнений · ${(json.length/1024).toFixed(1)} КБ. Файл совместим со старыми версиями (поля v4 на месте).</div>
+  <div class="actions" style="margin-top:0"><button class="btn" id="ex-dl"><svg class="ic"><use href="#i-down"/></svg>Скачать файл</button><button class="btn sec" id="ex-cp"><svg class="ic"><use href="#i-copy"/></svg>Копировать</button></div>
+  <label>Или выдели и скопируй вручную</label><textarea class="code" id="ex-ta" readonly>${esc(json)}</textarea>`);
+  $('#ex-dl').onclick=()=>{try{const blob=new Blob([json],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='gym-backup-'+today()+'.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},800);toast('ok','down','Файл скачивается')}catch(e){toast('warn','warn','Скачивание заблокировано — скопируй текст')}};
+  $('#ex-cp').onclick=async()=>{try{await navigator.clipboard.writeText(json);toast('ok','copy','Скопировано в буфер')}catch(e){$('#ex-ta').select();toast('warn','copy','Выделено — скопируй вручную')}};
+  $('#ex-ta').onclick=e=>e.target.select()}
+function importSheet(){openSheet(`<h2><svg class="ic"><use href="#i-up"/></svg>Импорт копии</h2><div class="desc">Вставь JSON из экспорта (v3–v6) или выбери файл. Данные объединятся: существующие даты не затрутся пустыми.</div>
+  <input type="file" id="im-file" accept=".json,.txt,application/json" style="padding:9px"><label>…или вставь текст</label><textarea class="code" id="im-ta" placeholder='{"v":4,"lib":…}'></textarea><div class="actions"><button class="btn sec" data-act="sheet-close">Отмена</button><button class="btn" id="im-ok">Импортировать</button></div>`);
+  $('#im-file').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{$('#im-ta').value=r.result};r.readAsText(f)};
+  $('#im-ok').onclick=()=>{let data;try{data=JSON.parse($('#im-ta').value)}catch(err){toast('err','warn','Не читается как JSON');return}
+    if(!data||(!data.days&&!data.lib)){toast('err','warn','Не похоже на копию дневника');return}
+    closeSheet();confirmSheet('Импортировать?',`В копии: <b>${Object.keys(data.days||{}).length}</b> тренировок, <b>${(data.lib||[]).length}</b> упражнений. Текущие записи сохранятся, Недостающие добавятся; при конфликте даты победит копия с большим числом подходов.`,'Импортировать',()=>{mirror();applyImport(data);toast('ok','up','Импорт завершён')})}}
+function applyImport(data){const before=JSON.stringify(serialize());try{localStorage.setItem(NS+'_mirror_prev',before)}catch(e){}
+  const dst={v:6,lib:[],prog:[],days:{},bw:{},mk:{},wb:{},fin:{},rh:[],arc:{},cfg:{...S.cfg,_fromCloud:1}};
+  mergeInto(dst,S);mergeInto(dst,data);
+  S={...S,...dst,cfg:{...S.cfg,...dst.cfg}};normalizeState();rebuildRH();purgeWellbeing(true);scheduleSave(200);rerender()}
+
+/* ================= TIMER ================= */
+let T={end:0,total:0,name:'',iv:null};
+function timerStart(sec,name){if(!sec)return;T={end:Date.now()+sec*1000,total:sec,name:name||'',iv:T.iv};
+  try{localStorage.setItem(NS+'_timer',JSON.stringify({end:T.end,total:T.total,name:T.name}))}catch(e){}
+  if(!T.iv)T.iv=setInterval(timerTick,250);renderTimerBar();vib('light')}
+function timerPlus(s){T.end+=s*1000;T.total+=s;renderTimerBar()}
+function timerStop(skipped){T.end=0;if(T.iv){clearInterval(T.iv);T.iv=null}try{localStorage.removeItem(NS+'_timer')}catch(e){}
+  const b=$('#timerbar');b.className='';b.innerHTML='';if(skipped)vib('sel')}
+function timerTick(){const left=T.end-Date.now();
+  if(left<=0){renderTimerBar(true);vib('end');toast('ok','timer','Отдых закончен — следующий подход!',3500);
+    try{localStorage.removeItem(NS+'_timer')}catch(e){}
+    setTimeout(()=>{if(T.end&&Date.now()-T.end>4500)timerStop()},5000);return}
+  renderTimerBar()}
+function renderTimerBar(ended){
+  const b=$('#timerbar');if(!T.end){b.className='';b.innerHTML='';return}
+  const left=Math.max(0,T.end-Date.now());const sec=Math.ceil(left/1000);const pct=T.total?left/(T.total*1000):0;
+  const mm=Math.floor(sec/60),ss=sec%60;const col=ended?cssVar('--ok'):cssVar('--acc');
+  b.className='on'+(ended?' end':sec<=5&&!ended?' low':'');
+  b.innerHTML=`<div class="ring">${ringSVG(Math.round(pct*100),48,col)}</div><div><div class="tt mono">${ended?'GO!':mm+':'+String(ss).padStart(2,'0')}</div><div class="tl">${ended?'Отдых закончен':esc(T.name||'Отдых')}</div></div><div class="sp"></div>
+  ${S.cfg.tb.slice(0,4).map(v=>`<button class="qchip" data-act="t-preset" data-v="${v}">${v>=60?(v/60)+'м':v+'с'}</button>`).join('')}
+  <button class="qchip" data-act="t-plus">+15с</button><button class="ibtn" data-act="t-skip"><svg class="ic"><use href="#i-x"/></svg></button>`}
+function startTimerRestore(){try{const t=JSON.parse(localStorage.getItem(NS+'_timer')||'null');if(t&&t.end>Date.now()){T={...t,iv:setInterval(timerTick,250)};renderTimerBar()}}catch(e){}}
+
+/* ================= MIDNIGHT / EVENTS ================= */
+let lastToday=today();
+function tickMidnight(){const t=today();if(t!==lastToday){lastToday=t;if(UI.diaryAuto){UI.diaryDate=t}UI.wbDraft=null;UI.wbEdit=false;purgeWellbeing();render(true)}}
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]');
+  if(!el){if(!e.target.closest('.acwrap'))hideACs();return}
+  const act=el.dataset.act;if(ACT[act]){e.preventDefault();ACT[act](el)}
+});
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.dataset.ac){renderAC(t.dataset.ac);return}
+  if(t.id==='lib-q'){UI.libQ=t.value;const y=window.scrollY;render(true);window.scrollTo(0,y);const inp=$('#lib-q');if(inp){inp.focus();inp.setSelectionRange(inp.value.length,inp.value.length)}return}
+  if(t.id==='cu-a'){S.cfg.a=t.value;applyTheme(true);return}
+  if(t.id==='cu-i'){S.cfg.i=t.value;applyTheme(true);return}
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.id==='rest-def'){S.cfg.rest=Number(t.value);scheduleSave();toast('ok','timer','Отдых по умолчанию: '+t.value+' с')}
+  if(t.id==='ret-sel'){S.cfg.ret=t.value==='never'?'never':Number(t.value);const n=purgeWellbeing();scheduleSave();rerender();toast('ok','heart',S.cfg.ret==='never'?'Заметки хранятся всегда':`Срок: ${RETS.find(r=>String(r[0])===String(S.cfg.ret))[1]}${n?` · ${n} в архив`:''}`)}
+});
+document.addEventListener('focusin',e=>{if(e.target.dataset&&e.target.dataset.ac)setTimeout(()=>{e.target.scrollIntoView({block:'center',behavior:'smooth'})},300)});
+window.addEventListener('error',ev=>{try{toast('err','warn','Ошибка: '+(ev.message||'').slice(0,80),5000)}catch(e){}});
+
+/* ================= GO ================= */
+boot();
+</script>
+</body>
+</html>
