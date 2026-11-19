@@ -638,6 +638,36 @@ function rSet(){let h=`<div class="card"><h3>${I('moon')}Стиль интерф
   return h}
 
 /* ---- ДЕЙСТВИЯ ---- */
+/* ==== АВТОСОХРАНЕНИЕ v7.1 ==== */
+let autoT=0,dT=null;
+function wbAuto(){
+  const t=today(),d=U.wd=U.wd||{...(S.wb[t]||{})},c=$('#wc');
+  if(c)d.c=c.value;
+  const r={};
+  if(d.sl)r.sl=d.sl;if(d.en)r.en=d.en;if(d.st)r.st=d.st;
+  if(d.dc&&d.dc.length)r.dc=d.dc;
+  const tx=String(d.c||'').trim();if(tx)r.c=tx;
+  if(Object.keys(r).length)S.wb[t]=r;else delete S.wb[t];
+  plan(500);
+}
+function commitSet(i,j){
+  const d=U.date,x=(S.days[d]||[])[i];if(!x)return false;
+  const wI=$('#w-'+i+'-'+j),rI=$('#r-'+i+'-'+j);if(!wI||!rI)return false;
+  if(wI.value.trim()===''||rI.value.trim()==='')return false;
+  const w=num(wI.value),r=Math.round(num(rI.value));
+  if(w<0||r<1)return false;
+  if(x.s[j]&&x.s[j][0]===w&&x.s[j][1]===r)return false;
+  autoT=Date.now();
+  if(j<x.s.length)A.ssave({dataset:{i:String(i),j:String(j)}});
+  else check(i,j);
+  return true;
+}
+function flush(){
+  mirror();
+  if(dirty&&CS&&!safe&&!busy){clearTimeout(sT);save()}
+}
+/* ==== конец блока ==== */
+
 const A={
 tab:e=>tab(e.dataset.t),cycle:cycle,close:closeSheet,
 cloud:()=>{const st=!CS?(oldTG?'Telegram старше 6.9 — облачное хранилище недоступно. Обнови Telegram; пока всё пишется на телефон.':'Открой приложение через Telegram — данные будут в облаке того же бота. Сейчас режим телефона.'):safe?'Облако ответило, но данные не прочитались. Запись приостановлена, чтобы не затереть облако. Нажми «Повторить чтение».':U.cs==='ok'?'Всё сохранено ✓':U.cs==='err'?'Последняя попытка не удалась: '+eh(lastE)+'. Повторяю автоматически.':'Сохраняю…';
@@ -648,9 +678,9 @@ reread:()=>{closeSheet();reread()},
 force:()=>{closeSheet();ask('Записать принудительно?','Облако не удалось прочитать. Запись заменит облачные данные текущими — предыдущее поколение ключей останется запасным. Сначала лучше сделать экспорт.','Записать',()=>{dirty=true;save(true)},true)},
 go:()=>{U.date=today();U.auto=1;tab('diary')},
 day:e=>{U.date=e.dataset.d;U.auto=e.dataset.d===today()?1:0;tab('diary')},
-sc:e=>{const d=U.wd=U.wd||{...(S.wb[today()]||{})},c=$('#wc');if(c)d.c=c.value;const k=e.dataset.k,v=+e.dataset.v;d[k]=d[k]===v?0:v;vib('sel');rr()},
+sc:e=>{const d=U.wd=U.wd||{...(S.wb[today()]||{})},c=$('#wc');if(c)d.c=c.value;const k=e.dataset.k,v=+e.dataset.v;d[k]=d[k]===v?0:v;U.we=true;wbAuto();vib('sel');rr()},
 wedit:()=>{U.we=true;U.wd={...(S.wb[today()]||{})};rr()},
-pdel:e=>{const d=U.wd=U.wd||{...(S.wb[today()]||{})},c=$('#wc');if(c)d.c=c.value;d.dc=(d.dc||[]).filter((_,i)=>i!==+e.dataset.i);rr()},
+pdel:e=>{const d=U.wd=U.wd||{...(S.wb[today()]||{})},c=$('#wc');if(c)d.c=c.value;d.dc=(d.dc||[]).filter((_,i)=>i!==+e.dataset.i);U.we=true;wbAuto();rr()},
 padd:()=>{const c=$('#wc');if(c)(U.wd=U.wd||{...(S.wb[today()]||{})}).c=c.value;
   const cur=(U.wd||S.wb[today()]||{}).dc||[];
   sheet(`<h2>${I('heart')}Где дискомфорт?</h2><div class="desc">Выбери зону и силу от 1 до 10. Можно несколько сразу.</div><div class="chips" id="pp">${PARTS.map(p=>`<button class="chip ${cur.some(x=>x.p===p)?'on':''}" data-act="pp" data-p="${esc(p)}">${esc(p)}</button>`).join('')}</div><label>Сила: <b id="pv" class="mono">3</b>/10</label><input type="range" id="pr" min="1" max="10" value="3"><div class="acts"><button class="btn sec" data-act="close">Отмена</button><button class="btn" id="pok">Добавить</button></div>`);
@@ -659,12 +689,9 @@ padd:()=>{const c=$('#wc');if(c)(U.wd=U.wd||{...(S.wb[today()]||{})}).c=c.value;
     if(!sel.length){toast('warn','warn','Выбери хотя бы одну зону');return}
     const d=U.wd=U.wd||{...(S.wb[today()]||{})};d.dc=d.dc||[];
     for(const p of sel){const x=d.dc.find(y=>y.p===p);if(x)x.v=v;else d.dc.push({p,v})}
-    closeSheet();rr()}},
+    U.we=true;wbAuto();closeSheet();rr()}},
 pp:e=>{e.classList.toggle('on');vib('sel')},
-wsave:()=>{const d=U.wd||{},c=$('#wc')?$('#wc').value.trim():(d.c||''),r={};
-  if(d.sl)r.sl=d.sl;if(d.en)r.en=d.en;if(d.st)r.st=d.st;if(d.dc&&d.dc.length)r.dc=d.dc;if(c)r.c=c;
-  if(!Object.keys(r).length){toast('warn','warn','Отметь хоть что-то: сон, энергию или самочувствие');return}
-  S.wb[today()]=r;U.we=false;U.wd=null;vib('ok');plan();rr();toast('ok','heart','Состояние записано')},
+wsave:()=>{wbAuto();U.we=false;U.wd=null;vib('ok');rr();toast('ok','heart','Состояние записано')},
 next:()=>start(S.cfg.nx),
 start:e=>start(+e.dataset.i),
 repeat:()=>{const ds=Object.keys(S.days).filter(d=>d<today()&&S.days[d].length).sort();
@@ -690,11 +717,12 @@ prevd:()=>{U.date=shift(U.date,-1);U.auto=0;rr()},
 nextd:()=>{if(U.date<today()){U.date=shift(U.date,1);U.auto=U.date===today()?1:0;rr()}},
 td:()=>{U.date=today();U.auto=1;rr()},
 mk:()=>{const d=U.date,m=S.mk[d]||{};
-  sheet(`<h2>${I('note')}Заметка · ${fd(d)}</h2><label>Комментарий к дню</label><textarea id="mt" placeholder="Как прошла тренировка, события…">${esc(m.t||'')}</textarea><div class="so" style="margin-top:9px"><div class="ol2"><b>Важная ⭐</b><span>пометить день звездой</span></div><button class="sw ${m.i?'on':''}" id="mi"></button></div><div class="acts"><button class="btn sec" data-act="close">Отмена</button><button class="btn" id="mok">Сохранить</button></div>`);
-  $('#mi').onclick=e=>e.currentTarget.classList.toggle('on');
-  $('#mok').onclick=()=>{const t=$('#mt').value.trim(),i=$('#mi').classList.contains('on')?1:0;
-    if(!t&&!i)delete S.mk[d];else S.mk[d]={i,t};
-    closeSheet();plan();rr();toast('ok','note','Заметка сохранена')}},
+  sheet(`<h2>${I('note')}Заметка · ${fd(d)}</h2><div class="desc">Сохраняется само, пока ты печатаешь.</div><label>Комментарий к дню</label><textarea id="mt" placeholder="Как прошла тренировка, события…">${esc(m.t||'')}</textarea><div class="so" style="margin-top:9px"><div class="ol2"><b>Важная ⭐</b><span>пометить день звездой</span></div><button class="sw ${m.i?'on':''}" id="mi"></button></div><div class="acts"><button class="btn" id="mok">Готово</button></div>`);
+  const commit=()=>{const t=$('#mt').value.trim(),i=$('#mi').classList.contains('on')?1:0;
+    if(!t&&!i)delete S.mk[d];else S.mk[d]={i,t};plan(500)};
+  $('#mt').oninput=commit;
+  $('#mi').onclick=e=>{e.currentTarget.classList.toggle('on');commit();vib('sel')};
+  $('#mok').onclick=()=>{commit();closeSheet();rr();toast('ok','note','Заметка сохранена')}},
 check:e=>check(+e.dataset.i,+e.dataset.j),
 sedit:e=>{const i=+e.dataset.i,j=+e.dataset.j,s=S.days[U.date][i].s[j],r=$('#sr-'+i+'-'+j);if(!r)return;
   r.outerHTML=`<div class="sr" id="sr-${i}-${j}"><span class="n">${j+1}</span><input class="w mono" id="w-${i}-${j}" inputmode="decimal" value="${kg(s[0])}"><span class="t">×</span><input class="r mono" id="r-${i}-${j}" inputmode="numeric" value="${s[1]}"><button class="ck" data-act="ssave" data-i="${i}" data-j="${j}">${I('check')}</button></div>`;
@@ -810,7 +838,8 @@ function delta(i,k,v){const x=S.days[U.date][i];if(!x)return;
   if(!w&&!r&&x.s.length){w=x.s[x.s.length-1][0];r=x.s[x.s.length-1][1]}
   if(!w&&!r){const p=prev(x.n,U.date);if(p&&p.ex.s[0]){w=p.ex.s[0][0];r=p.ex.s[0][1]}}
   if(k==='w')w=Math.max(0,Math.round((w+v)*100)/100);else r=Math.max(1,r+v);
-  wI.value=kg(w);rI.value=r;vib('sel')}
+  wI.value=kg(w);rI.value=r;vib('sel');
+  clearTimeout(dT);dT=setTimeout(()=>commitSet(i,j),1200)}
 
 function check(i,j){const d=U.date,x=S.days[d][i];if(!x)return;
   const wI=$('#w-'+i+'-'+j),rI=$('#r-'+i+'-'+j);if(!wI||!rI)return;
@@ -844,7 +873,7 @@ function pick(c,n){acHide();
   else if(c==='prog'){const p=S.prog[+$('#pi').value];if(!p)return;
     if(!p.ex.includes(n))p.ex.push(n);
     if(!lib(n))S.lib.push({n,g:'',t:'',s:'',rest:0});
-    $('#pl').innerHTML=pex(p);const i=$('#ac-prog');if(i)i.value='';acHide();plan();vib('light')}
+    $('#pl').innerHTML=pex(p);const cn=$('#pc');if(cn)cn.textContent=p.ex.length;const i=$('#ac-prog');if(i)i.value='';acHide();plan(200);vib('light')}
   else if(c==='stat'){U.sx=n;rr()}
   else if(c==='rep'){const i=+$('#ri').value,x=S.days[U.date][i],old=x.n;
     if(!lib(n))S.lib.push({n,g:'',t:'',s:'',rest:0});
@@ -867,10 +896,11 @@ function exSheet(i){const x=S.days[U.date][i];if(!x)return;
 const pex=p=>p.ex.map((n,k)=>`<div class="lr"><span class="gd" style="background:${gcol((lib(n)||{}).g)}"></span><span class="sp" style="font-weight:700;font-size:13px">${esc(n)}</span><button class="ib" data-pd="${k}">${I('x')}</button></div>`).join('')||'<div class="tiny">Пока пусто — добавь ниже.</div>';
 
 function progSheet(i){const p=S.prog[i];if(!p)return;
-  sheet(`<h2>${I('cal')}День программы</h2><input type="hidden" id="pi" value="${i}"><label>Название дня</label><input id="pn" value="${esc(p.name)}"><label>Упражнения (${p.ex.length})</label><div id="pl">${pex(p)}</div><label>Добавить упражнение</label>${acw('prog','Название или группа мышц…')}<div class="acts"><button class="btn sec" data-act="close">Закрыть</button><button class="btn" id="pok2">Сохранить</button></div>`);
-  $('#pok2').onclick=()=>{p.name=$('#pn').value.trim()||p.name;closeSheet();plan();rr();toast('ok','cal','День сохранён')};
+  sheet(`<h2>${I('cal')}День программы</h2><div class="desc">Изменения сохраняются сами.</div><input type="hidden" id="pi" value="${i}"><label>Название дня</label><input id="pn" value="${esc(p.name)}"><label>Упражнения (<span id="pc">${p.ex.length}</span>)</label><div id="pl">${pex(p)}</div><label>Добавить упражнение</label>${acw('prog','Название или группа мышц…')}<div class="acts"><button class="btn" id="pok2">Готово</button></div>`);
+  $('#pn').oninput=()=>{const v=$('#pn').value.trim();if(v){p.name=v;plan(600)}};
+  $('#pok2').onclick=()=>{const v=$('#pn').value.trim();if(v)p.name=v;plan(200);closeSheet();rr();toast('ok','cal','День сохранён')};
   $('#pl').addEventListener('click',e=>{const b=e.target.closest('[data-pd]');
-    if(b){p.ex.splice(+b.dataset.pd,1);$('#pl').innerHTML=pex(p);plan();vib('sel')}})}
+    if(b){p.ex.splice(+b.dataset.pd,1);$('#pl').innerHTML=pex(p);const c=$('#pc');if(c)c.textContent=p.ex.length;plan(200);vib('sel')}})}
 
 function start(i){const p=S.prog[i];if(!p)return;
   const t=today(),cur=S.days[t]||[],miss=p.ex.filter(n=>!cur.some(e=>norm(e.n)===norm(n)));
@@ -880,40 +910,55 @@ function start(i){const p=S.prog[i];if(!p)return;
     delete S.fin[t];S.cfg.nx=(i+1)%S.prog.length;plan();U.date=t;U.auto=1;tab('diary');vib('ok');toast('ok','play','День «'+p.name+'» начат')})}
 
 function libSheet(name){const e=name?lib(name):null;
-  sheet(`<h2>${I(e?'edit':'plus')}${e?'Упражнение':'Новое упражнение'}</h2>${e?'<div class="desc">Переименование обновит название и в истории тренировок, и в программе.</div>':''}
+  sheet(`<h2>${I(e?'edit':'plus')}${e?'Упражнение':'Новое упражнение'}</h2><div class="desc">${e?'Правки сохраняются сами. Переименование обновит историю и программу.':'Заполни название и нажми «Создать» — дальше правки будут сохраняться сами.'}</div>
   <label>Название</label><input id="ln" value="${esc(e?e.n:'')}">
   <label>Группа мышц</label><div class="chips" id="lgr">${[...new Set([...groups(),...GO,''])].map(g=>`<button class="chip ${e&&(e.g||'')===g?'on':''}" data-g="${esc(g)}">${esc(g||'Без группы')}</button>`).join('')}</div>
   <input id="lgn" placeholder="…или новая группа" style="margin-top:7px">
   <label>Целевые мышцы</label><input id="lt" value="${esc(e?e.t:'')}" placeholder="например Широчайшие">
   <label>Синергисты</label><input id="ls2" value="${esc(e?e.s:'')}" placeholder="например Бицепс">
   <label>Свой отдых, сек (0 = по умолчанию)</label><input id="lr2" class="mono" inputmode="numeric" value="${e?(e.rest||0):0}">
-  <div class="acts">${e?'<button class="btn dgr" id="ld">Удалить</button>':''}<button class="btn sec" data-act="close">Отмена</button><button class="btn" id="lok">Сохранить</button></div>`);
+  <div class="acts">${e?'<button class="btn dgr" id="ld">Удалить</button>':''}<button class="btn" id="lok">${e?'Готово':'Создать'}</button></div>`);
   let g=e?(e.g||''):'';
-  $$('#lgr .chip').forEach(c=>{c.onclick=()=>{$$('#lgr .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');g=c.dataset.g;$('#lgn').value='';vib('sel')}});
-  $('#lok').onclick=()=>{const n=$('#ln').value.trim();
-    if(!n){toast('warn','warn','Нужно название');return}
-    const gg=$('#lgn').value.trim()||g,dup=S.lib.find(x=>norm(x.n)===norm(n)&&x!==e);
+  const read=()=>({n:$('#ln').value.trim(),g:$('#lgn').value.trim()||g,t:$('#lt').value.trim(),s:$('#ls2').value.trim(),rest:cl(Math.round(num($('#lr2').value)),0,3600)});
+  const auto=rename=>{if(!e)return;const d=read();if(!d.n)return;
+    const dup=S.lib.find(x=>norm(x.n)===norm(d.n)&&x!==e);if(dup)return;
+    const old=e.n;Object.assign(e,d);
+    if(rename&&norm(old)!==norm(d.n)){
+      for(const k in S.days)for(const x of S.days[k])if(norm(x.n)===norm(old))x.n=d.n;
+      for(const p of S.prog)p.ex=p.ex.map(x=>norm(x)===norm(old)?d.n:x);
+      for(const r of S.rh)if(norm(r.n)===norm(old))r.n=d.n;
+      if(U.sx&&norm(U.sx)===norm(old))U.sx=d.n}
+    plan(600)};
+  $$('#lgr .chip').forEach(c=>{c.onclick=()=>{$$('#lgr .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');g=c.dataset.g;$('#lgn').value='';vib('sel');auto(false)}});
+  if(e){
+    $('#ln').onchange=()=>{const d=read();
+      if(!d.n){toast('warn','warn','Нужно название');$('#ln').value=e.n;return}
+      const dup=S.lib.find(x=>norm(x.n)===norm(d.n)&&x!==e);
+      if(dup){toast('warn','warn','Такое упражнение уже есть: «'+dup.n+'»');$('#ln').value=e.n;return}
+      auto(true)};
+    ['#lgn','#lt','#ls2','#lr2'].forEach(sel=>{$(sel).oninput=()=>auto(false)});
+  }
+  $('#lok').onclick=()=>{const d=read();
+    if(!d.n){toast('warn','warn','Нужно название');return}
+    const dup=S.lib.find(x=>norm(x.n)===norm(d.n)&&x!==e);
     if(dup){toast('warn','warn','Такое упражнение уже есть: «'+dup.n+'»');return}
-    const d={n,g:gg,t:$('#lt').value.trim(),s:$('#ls2').value.trim(),rest:cl(Math.round(num($('#lr2').value)),0,3600)};
-    if(e){const old=e.n;Object.assign(e,d);
-      if(norm(old)!==norm(n)){
-        for(const k in S.days)for(const x of S.days[k])if(norm(x.n)===norm(old))x.n=n;
-        for(const p of S.prog)p.ex=p.ex.map(x=>norm(x)===norm(old)?n:x);
-        for(const r of S.rh)if(norm(r.n)===norm(old))r.n=n;
-        if(U.sx&&norm(U.sx)===norm(old))U.sx=n}}
-    else S.lib.push(d);
-    closeSheet();plan();rr();toast('ok','check',e?'Сохранено (история обновлена)':'Упражнение добавлено')};
+    if(e){auto(true);closeSheet();plan(200);rr();toast('ok','check','Сохранено (история обновлена)')}
+    else{S.lib.push(d);closeSheet();plan(200);rr();toast('ok','plus','Упражнение добавлено')}};
   if(e)$('#ld').onclick=()=>{closeSheet();
     ask('Удалить из базы?',`«<b>${esc(e.n)}</b>» исчезнет из библиотеки и программы. <b>История тренировок и рекорды останутся.</b>`,'Удалить',()=>{
       S.lib=S.lib.filter(x=>x!==e);
       for(const p of S.prog)p.ex=p.ex.filter(x=>norm(x)!==norm(e.n));
-      plan();rr()},true)}}
+      plan(200);rr()},true)}}
 
-function bwSheet(){sheet(`<h2>${I('scale')}Запись веса</h2><label>Дата</label><input type="date" id="bd" value="${today()}" max="${today()}"><label>Вес, кг</label><input id="bv" class="mono" inputmode="decimal" placeholder="57,5"><div class="acts"><button class="btn sec" data-act="close">Отмена</button><button class="btn" id="bok">Записать</button></div>`);
-  $('#bok').onclick=()=>{const d=$('#bd').value,v=num($('#bv').value);
-    if(!d||!/^\d{4}-\d{2}-\d{2}$/.test(d)){toast('warn','warn','Проверь дату');return}
-    if(v<20||v>300){toast('warn','warn','Похоже на опечатку. Вес в кг, например 57,5');return}
-    S.bw[d]=v;closeSheet();plan();rr();vib('ok');toast('ok','scale','Вес записан')}}
+function bwSheet(){sheet(`<h2>${I('scale')}Запись веса</h2><div class="desc">Запись сохранится сама, как только вес станет похож на правду.</div><label>Дата</label><input type="date" id="bd" value="${today()}" max="${today()}"><label>Вес, кг</label><input id="bv" class="mono" inputmode="decimal" placeholder="57,5"><div class="acts"><button class="btn" id="bok">Готово</button></div>`);
+  const commit=()=>{const d=$('#bd').value,v=num($('#bv').value);
+    if(!d||!/^\d{4}-\d{2}-\d{2}$/.test(d))return false;
+    if(v<20||v>300)return false;
+    S.bw[d]=v;plan(600);return true};
+  $('#bv').oninput=commit;
+  $('#bd').onchange=commit;
+  $('#bok').onclick=()=>{if(!commit()){toast('warn','warn','Проверь дату и вес: вес в кг, например 57,5');return}
+    closeSheet();rr();vib('ok');toast('ok','scale','Вес записан')}}
 
 function applyImp(d){ls(NS+'_mirror_prev',JSON.stringify(pack()));
   const t=blank();t.cfg={...S.cfg,_lk:1};
@@ -993,20 +1038,24 @@ document.addEventListener('pointercancel',dragEnd);
 document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');
   if(!el){if(!e.target.closest('.acw'))acHide();return}
   const a=el.dataset.act;
+  if((a==='check'||a==='ssave')&&Date.now()-autoT<600){e.preventDefault();return}
   if(A[a]){e.preventDefault();A[a](el)}});
 document.addEventListener('input',e=>{const t=e.target;
   if(t.dataset&&t.dataset.ac){acRender(t.dataset.ac);return}
-  if(t.id==='wc'){(U.wd=U.wd||{...(S.wb[today()]||{})}).c=t.value;return}
+  if(t.id==='wc'){(U.wd=U.wd||{...(S.wb[today()]||{})}).c=t.value;U.we=true;wbAuto();return}
+  if(t.id==='bq'){const v=num(t.value);if(v>=20&&v<=300){S.bw[today()]=v;plan(700)}return}
   if(t.id==='lq'){U.lq=t.value;const y=scrollY;render(true);scrollTo(0,y);
     const i=$('#lq');if(i){i.focus();try{i.setSelectionRange(i.value.length,i.value.length)}catch(x){}}return}
   if(t.id==='ca'){S.cfg.a=t.value;theme(true);return}
   if(t.id==='ci'){S.cfg.i=t.value;theme(true);return}});
 document.addEventListener('change',e=>{const t=e.target;
-  if(t.id==='rd'){S.cfg.rest=+t.value;plan();toast('ok','timer','Отдых по умолчанию: '+t.value+' с')}
-  if(t.id==='lsort'){S.cfg.ls=t.value;plan();rr()}
+  if(t.id==='rd'){S.cfg.rest=+t.value;plan(200);toast('ok','timer','Отдых по умолчанию: '+t.value+' с');return}
+  if(t.id==='lsort'){S.cfg.ls=t.value;plan(200);rr();return}
   if(t.id==='ret'){S.cfg.ret=t.value==='never'?'never':+t.value;
-    const n=purge();plan();rr();
-    toast('ok','heart',S.cfg.ret==='never'?'Заметки хранятся всегда':'Срок: '+RET.find(r=>String(r[0])===String(S.cfg.ret))[1]+(n?' · '+n+' в архив':''))}});
+    const n=purge();plan(200);rr();
+    toast('ok','heart',S.cfg.ret==='never'?'Заметки хранятся всегда':'Срок: '+RET.find(r=>String(r[0])===String(S.cfg.ret))[1]+(n?' · '+n+' в архив':''));return}
+  const m=/^([wr])-(\d+)-(\d+)$/.exec(t.id||'');
+  if(m){clearTimeout(dT);commitSet(+m[2],+m[3])}});
 document.addEventListener('focusin',e=>{const t=e.target;
   if(t.dataset&&t.dataset.ac){acRender(t.dataset.ac);
     setTimeout(()=>{try{t.scrollIntoView({block:'center',behavior:'smooth'})}catch(x){}},300)}});
@@ -1018,12 +1067,12 @@ document.addEventListener('keydown',e=>{
       if(btn){e.preventDefault();btn.click()}}}});
 let lastVis=0;
 document.addEventListener('visibilitychange',()=>{
-  if(document.hidden){mirror();return}
+  if(document.hidden){flush();return}
   if(!CS)return;
   if(safe){const now=Date.now();if(now-lastVis>20000){lastVis=now;reread()}return}
-  if(dirty&&!busy)save()});
-addEventListener('pagehide',mirror);
-addEventListener('beforeunload',mirror);
+  if(dirty&&!busy){clearTimeout(sT);save()}});
+addEventListener('pagehide',flush);
+addEventListener('beforeunload',flush);
 addEventListener('error',e=>{try{toast('err','warn','Ошибка: '+String(e.message||'').slice(0,80),5000)}catch(x){}});
 
 /* ---- ЗАПУСК ---- */
@@ -1074,7 +1123,8 @@ async function boot(){
   else if(!CS){setCS('off');toast('warn','warn',oldTG?'Нужен Telegram 6.9+ для облака. Пока данные на телефоне.':'Облако доступно только внутри Telegram. Пока данные на телефоне.',6000)}
   if(pg)toast('warn','trash','Автоочистка: '+pg+' старых заметок перенесено в архив');
   if(dirty&&!safe)plan(900);
-  setInterval(midnight,30000)}
+  setInterval(midnight,30000);
+  setInterval(()=>{if(dirty&&CS&&!safe&&!busy){clearTimeout(sT);save()}},20000)}
 boot();
 </script>
 </body>
