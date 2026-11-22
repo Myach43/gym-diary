@@ -151,7 +151,7 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 .br{display:flex;align-items:center;gap:8px;margin-bottom:7px}
 .br .bl{width:82px;font-size:12px;font-weight:800;color:var(--t2);flex:none;display:flex;align-items:center;gap:5px}
 .br .tk{flex:1;height:14px;background:var(--s2);border-radius:7px;overflow:hidden;border:1px solid var(--ln)}
-.br .fi{height:100%;border-radius:7px;animation:grw .7s var(--e) both;transform-origin:left}@keyframes grw{from{transform:scaleX(0)}}
+.br .fi{height:100%;border-radius:7px;transform-origin:left}@keyframes grw{from{transform:scaleX(0)}}
 .br .bv{width:40px;text-align:right;font-family:var(--fm);font-weight:800;font-size:12px;color:var(--t2)}
 .wbn{display:flex;gap:8px;align-items:flex-start;background:color-mix(in srgb,var(--warn) 9%,var(--s2));border:1px solid color-mix(in srgb,var(--warn) 34%,transparent);border-radius:12px;padding:9px 11px;font-size:12.5px;font-weight:600;color:var(--t2);margin-bottom:6px}
 .wbn .ic{width:16px;height:16px;color:var(--warn);margin-top:1px}
@@ -249,7 +249,7 @@ textarea.code{font-family:var(--fm);font-size:11px;min-height:110px;white-space:
 .lv-lvl span{font-size:11px;font-weight:800;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;padding-bottom:5px}
 .lv-lvl em{margin-left:auto;font-style:normal;font-family:var(--fm);font-weight:800;font-size:13px;color:var(--t2);padding-bottom:4px}
 .lv-track{height:14px;border-radius:8px;background:var(--s2);border:1px solid var(--ln);overflow:hidden;margin-top:10px}
-.lv-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--ac),var(--a2));animation:grw .8s var(--e) both;transform-origin:left;position:relative}
+.lv-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--ac),var(--a2));transform-origin:left;position:relative}
 .lv-fill::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.22) 0 6px,transparent 6px 13px);opacity:.5}
 .lv-left{display:flex;justify-content:space-between;font-size:11.5px;color:var(--t3);margin-top:6px;font-weight:700}
 .lv-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:14px}
@@ -280,7 +280,7 @@ textarea.code{font-family:var(--fm);font-size:11px;min-height:110px;white-space:
 .lv-g .lv b{font-family:var(--fm);font-weight:800;font-size:18px;display:block;line-height:1}
 .lv-g .lv span{font-size:9px;font-weight:800;color:var(--t3);letter-spacing:.05em}
 .lv-g .bar{height:9px;border-radius:6px;background:var(--s2);border:1px solid var(--ln);overflow:hidden;margin-top:9px}
-.lv-g .bar i{display:block;height:100%;border-radius:6px;animation:grw .7s var(--e) both;transform-origin:left}
+.lv-g .bar i{display:block;height:100%;border-radius:6px;transform-origin:left}
 .lv-g .nums{display:flex;justify-content:space-between;font-family:var(--fm);font-size:10.5px;color:var(--t3);margin-top:5px;font-weight:700}
 .lv-hist{max-height:300px;overflow-y:auto}.lv-hist.all{max-height:none}
 .lv-ev{display:flex;align-items:center;gap:10px;padding:9px 2px;border-top:1px solid var(--ln);font-size:13px}.lv-ev:first-child{border-top:none}
@@ -302,7 +302,7 @@ textarea.code{font-family:var(--fm);font-size:11px;min-height:110px;white-space:
 .lv-home .l1 b{font-family:var(--fm);font-weight:800;font-size:22px;line-height:1}
 .lv-home .l1 em{font-style:normal;font-size:10px;font-weight:800;color:var(--ai);background:var(--ac);padding:2px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.03em}
 .lv-home .bar{height:9px;border-radius:6px;background:var(--s2);border:1px solid var(--ln);overflow:hidden;margin-top:8px}
-.lv-home .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--ac),var(--a2));border-radius:6px;animation:grw .8s var(--e) both;transform-origin:left}
+.lv-home .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--ac),var(--a2));border-radius:6px;transform-origin:left}
 .lv-home .l2{display:flex;justify-content:space-between;font-size:10.5px;color:var(--t3);font-weight:700;margin-top:5px;font-family:var(--fm)}
 .lv-home .go{width:36px;height:36px;flex:none;border-radius:11px;background:var(--s2);border:1px solid var(--l2);display:grid;place-items:center;color:var(--t2)}
 .lv-home .go .ic{width:17px;height:17px}
@@ -320,6 +320,12 @@ textarea.code{font-family:var(--fm);font-size:11px;min-height:110px;white-space:
 .lv-cel .ntt svg{width:14px;height:14px;image-rendering:pixelated;shape-rendering:crispEdges}
 .lv-cel .xs{font-family:var(--fm);font-size:12px;color:var(--t2);margin-top:12px;font-weight:700}
 .lv-cel .btn{margin-top:18px;width:100%}
+@keyframes lvUp{from{width:var(--w0,0%)}to{width:var(--w1,100%)}}
+.lv-up{animation:lvUp .85s var(--e) both}
+.lv-fill.lv-up::after{animation:lvShine .85s var(--e) both}
+@keyframes lvShine{0%{opacity:0}45%{opacity:.85}100%{opacity:.5}}
+html.noanim .lv-up,html.noanim .lv-fill.lv-up::after{animation:none}
+@media(prefers-reduced-motion:reduce){.lv-up,.lv-fill.lv-up::after{animation:none}}
 </style><body>
 <div id="amb"></div><div id="grain"></div>
 <div id="boot"><div class="bl"><svg class="ic" viewBox="0 0 24 24"><path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></svg>ЖЕЛЕЗНЫЙ <em style="color:var(--ac);font-style:normal">ДНЕВНИК</em></div><div class="bar"><i></i></div><div class="bs" id="bs">Читаю облако Telegram…</div></div>
@@ -630,6 +636,24 @@ function getName(){return S.cfg.nm||lg('gx6_name')||tgName()||'Атлет'}
 function setName(v){const n=String(v||'').trim().slice(0,24);if(n){S.cfg.nm=n;ls('gx6_name',n)}else{S.cfg.nm='';ls('gx6_name','')}plan(300);XPC.sig=''}
 const VIEW={sort:lg('gx6_lv_sort')||'lvl',hist:lg('gx6_lv_hist')||'all',hall:false,seed:+(lg('gx6_lv_seed')||0)};
 function saveView(){ls('gx6_lv_sort',VIEW.sort);ls('gx6_lv_hist',VIEW.hist);ls('gx6_lv_seed',String(VIEW.seed))}
+/* ---- ПОЛОСКИ ПРОГРЕССА: двигаются только при росте ---- */
+const BAR_DUR=850;
+let BAR={},BARA={};
+try{const br=JSON.parse(lg('gx6_lv_bar')||'{}');if(br&&typeof br==='object')BAR=br}catch(e){BAR={}}
+function barSave(){ls('gx6_lv_bar',JSON.stringify(BAR))}
+function bar(key,pct){
+ const now=cl(Math.round(+pct||0),0,100);
+ const had=Object.prototype.hasOwnProperty.call(BAR,key);
+ const from=had?cl(Math.round(+BAR[key]||0),0,100):0;
+ if(!had||now!==from){BAR[key]=now;barSave()}
+ if(now>from){BARA[key]={a:from,b:now,t:Date.now()};
+  return{c:'lv-up',s:'--w0:'+from+'%;--w1:'+now+'%;width:'+now+'%'}}
+ const an=BARA[key];
+ if(an&&an.b===now){const el=Date.now()-an.t;
+  if(el<BAR_DUR){const cur=an.a+(an.b-an.a)*(el/BAR_DUR);
+   return{c:'lv-up',s:'--w0:'+cur.toFixed(1)+'%;--w1:'+now+'%;width:'+now+'%;animation-duration:'+Math.max(120,BAR_DUR-el)+'ms'}}
+  delete BARA[key]}
+ return{c:'',s:'width:'+now+'%'}}
 function celebrate(lvl,title,xp){const old=$('#lv-cel');if(old)old.remove();
  const d=document.createElement('div');d.className='lv-cel on';d.id='lv-cel';
  d.innerHTML='<div class="sc" data-act="celx"></div><div class="box">'+cup(82).replace('<svg','<svg class="cup"')+'<div class="hi">Поздравляю!</div><div class="bg2">ВЫ ДОСТИГЛИ</div><div class="lvl">'+lvl+' LVL</div><div class="ntt">'+cup(14)+esc(title)+'</div><div class="xs">'+xp+' XP всего</div><button class="btn" data-act="celx">Продолжить</button></div>';
@@ -642,8 +666,8 @@ function checkLevels(silent){const P=computeXP();let seen;try{seen=JSON.parse(lg
   if(g.lvl>was){if(!silent)toast('rec','cup',g.g+' достигла LVL '+g.lvl+' — '+g.title,4200);seen.g[g.g]=g.lvl}
   else if(g.lvl<was)seen.g[g.g]=g.lvl});
  ls('gx6_lv_seen',JSON.stringify(seen))}
-function homeWidget(){const P=computeXP(),T=P.total;
- return '<div class="lv-home" data-act="goprof"><i class="bg"></i><div class="av">'+avatar(T.lvl,VIEW.seed)+'</div><div class="mid"><div class="l1"><b>LVL '+T.lvl+'</b><em>'+esc(T.title)+'</em></div><div class="bar"><i style="width:'+T.pct+'%"></i></div><div class="l2"><span>'+(T.max?T.xp+' XP · MAX':T.into+'/'+T.need+' XP')+'</span><span>'+(P.best?esc(P.best.g)+' '+P.best.lvl:'—')+'</span></div></div><button class="go" data-act="goprof">'+I('chev')+'</button></div>'}
+function homeWidget(){const P=computeXP(),T=P.total,bh=bar('total',T.pct);
+ return '<div class="lv-home" data-act="goprof"><i class="bg"></i><div class="av">'+avatar(T.lvl,VIEW.seed)+'</div><div class="mid"><div class="l1"><b>LVL '+T.lvl+'</b><em>'+esc(T.title)+'</em></div><div class="bar"><i class="'+bh.c+'" style="'+bh.s+'"></i></div><div class="l2"><span>'+(T.max?T.xp+' XP · MAX':T.into+'/'+T.need+' XP')+'</span><span>'+(P.best?esc(P.best.g)+' '+P.best.lvl:'—')+'</span></div></div><button class="go" data-act="goprof">'+I('chev')+'</button></div>'}
 
 /* ---- РЕНДЕР ---- */
 const TABS=[['home','Сегодня','home'],['diary','Дневник','book'],['stats','Прогресс','chart'],['prof','Профиль','user'],['lib','База','lib'],['set','Ещё','gear']];
@@ -780,8 +804,8 @@ function bars(p,lab,col){const W=340,H=100,P=26,mx=Math.max(1,...p.map(x=>x.y)),
   b+='<rect x="'+px+'" y="'+(H-22-h)+'" width="'+bw+'" height="'+Math.max(2,h)+'" rx="4" fill="'+col+'" opacity=".85"><title>'+fd(x.x)+': '+ton(x.y)+'</title></rect>'});
  return'<svg class="chart" viewBox="0 0 '+W+' '+H+'"><line x1="'+P+'" y1="'+(H-22)+'" x2="'+(W-P)+'" y2="'+(H-22)+'" stroke="var(--ln)"/>'+b+'<text x="'+P+'" y="'+(H-6)+'">'+fd(p[0].x)+'</text><text x="'+(W-P)+'" y="'+(H-6)+'" text-anchor="end">'+fd(p[p.length-1].x)+'</text><text x="'+(W-2)+'" y="12" text-anchor="end">'+esc(lab)+'</text></svg>'}
 
-function rProf(){const P=computeXP(),T=P.total,nm=getName();
- let h='<div class="lv-hero"><div class="lv-top"><div class="lv-av"><i></i>'+avatar(T.lvl,VIEW.seed)+'</div><div class="lv-id"><div class="lv-name">'+esc(nm)+'<button data-act="name" title="Изменить имя">'+I('edit')+'</button></div><div class="lv-ttl">'+cup(13)+esc(T.title)+'</div><div class="lv-sub">Общая прокачка всего тела</div></div></div><div class="lv-lvl"><b>'+T.lvl+'</b><span>LVL'+(T.max?' · MAX':'')+'</span><em>'+T.xp+' XP</em></div><div class="lv-track"><div class="lv-fill" style="width:'+T.pct+'%"></div></div><div class="lv-left"><span>'+(T.max?'Максимальный уровень':T.into+' / '+T.need+' XP')+'</span><span>'+(T.max?'∞':'осталось '+(T.need-T.into)+' XP')+'</span></div><div class="lv-strip"><div><b>'+P.stats.days+'</b><span>трен.</span></div><div><b>'+P.stats.sets+'</b><span>подходов</span></div><div><b style="color:var(--gold)">'+P.stats.recs+'</b><span>рекордов</span></div><div><b>'+P.totalXP+'</b><span>всего XP</span></div></div></div>';
+function rProf(){const P=computeXP(),T=P.total,nm=getName(),bt=bar('total',T.pct);
+ let h='<div class="lv-hero"><div class="lv-top"><div class="lv-av"><i></i>'+avatar(T.lvl,VIEW.seed)+'</div><div class="lv-id"><div class="lv-name">'+esc(nm)+'<button data-act="name" title="Изменить имя">'+I('edit')+'</button></div><div class="lv-ttl">'+cup(13)+esc(T.title)+'</div><div class="lv-sub">Общая прокачка всего тела</div></div></div><div class="lv-lvl"><b>'+T.lvl+'</b><span>LVL'+(T.max?' · MAX':'')+'</span><em>'+T.xp+' XP</em></div><div class="lv-track"><div class="lv-fill '+bt.c+'" style="'+bt.s+'"></div></div><div class="lv-left"><span>'+(T.max?'Максимальный уровень':T.into+' / '+T.need+' XP')+'</span><span>'+(T.max?'∞':'осталось '+(T.need-T.into)+' XP')+'</span></div><div class="lv-strip"><div><b>'+P.stats.days+'</b><span>трен.</span></div><div><b>'+P.stats.sets+'</b><span>подходов</span></div><div><b style="color:var(--gold)">'+P.stats.recs+'</b><span>рекордов</span></div><div><b>'+P.totalXP+'</b><span>всего XP</span></div></div></div>';
  h+='<div class="lv-ctl"><label>Группы</label><select data-act="lvsort"><option value="lvl"'+(VIEW.sort==='lvl'?' selected':'')+'>по уровню</option><option value="xp"'+(VIEW.sort==='xp'?' selected':'')+'>по XP</option><option value="name"'+(VIEW.sort==='name'?' selected':'')+'>по названию</option><option value="weak"'+(VIEW.sort==='weak'?' selected':'')+'>слабые сверху</option></select><label>История</label><select data-act="lvhist"><option value="all"'+(VIEW.hist==='all'?' selected':'')+'>вся</option><option value="total"'+(VIEW.hist==='total'?' selected':'')+'>только тело</option><option value="group"'+(VIEW.hist==='group'?' selected':'')+'>только группы</option></select><button class="lv-mini" data-act="lvseed">'+I('reload')+'Аватар</button><button class="lv-mini" data-act="lvexp">'+I('down')+'Экспорт</button><button class="lv-mini" data-act="lvrecalc" title="Пересчитать XP">'+I('reload')+'</button></div>';
  if(P.noGroup.length)h+='<div class="wbn">'+I('warn')+'<div><b>'+P.noGroup.length+' '+pl(P.noGroup.length,'упражнение','упражнения','упражнений')+' без группы мышц.</b><br>За них начислен только общий XP — групповой не начислен.<div style="margin-top:7px"><button class="btn sec sm" data-act="nogroup">Открыть «Без группы» в Базе</button></div></div></div>';
  h+='<div class="lv-duo">';
@@ -796,7 +820,7 @@ function rProf(){const P=computeXP(),T=P.total,nm=getName();
  else if(VIEW.sort==='name')gr.sort((a,b)=>a.g.localeCompare(b.g,'ru'));
  else gr.sort((a,b)=>a.lvl-b.lvl||a.xp-b.xp);
  h+='<div class="card"><h3>'+I('grid')+'Прокачка по группам мышц</h3><div class="lv-glist">';
- gr.forEach(g=>{h+='<div class="lv-g"><div class="row1"><div class="lv-badge">'+badge(g.g,g.color)+'</div><div><div class="nm">'+esc(g.g)+'</div><div class="tt">'+esc(g.title)+'</div></div><div class="lv"><b style="color:'+g.color+'">'+g.lvl+'</b><span>LVL'+(g.max?' MAX':'')+'</span></div></div><div class="bar"><i style="width:'+g.pct+'%;background:linear-gradient(90deg,'+g.color+','+cv('--ac')+')"></i></div><div class="nums"><span>'+(g.max?g.xp+' XP · максимум':g.into+' / '+g.need+' XP')+'</span><span>'+(g.max?'∞':'+'+(g.need-g.into)+' до '+(g.lvl+1))+'</span></div></div>'});
+ gr.forEach(g=>{const gb=bar('g:'+g.g,g.pct);h+='<div class="lv-g"><div class="row1"><div class="lv-badge">'+badge(g.g,g.color)+'</div><div><div class="nm">'+esc(g.g)+'</div><div class="tt">'+esc(g.title)+'</div></div><div class="lv"><b style="color:'+g.color+'">'+g.lvl+'</b><span>LVL'+(g.max?' MAX':'')+'</span></div></div><div class="bar"><i class="'+gb.c+'" style="'+gb.s+';background:linear-gradient(90deg,'+g.color+','+cv('--ac')+')"></i></div><div class="nums"><span>'+(g.max?g.xp+' XP · максимум':g.into+' / '+g.need+' XP')+'</span><span>'+(g.max?'∞':'+'+(g.need-g.into)+' до '+(g.lvl+1))+'</span></div></div>'});
  h+='</div><div class="lv-note">Основная группа — <b>5 XP</b> за упражнение. Синергисты — <b>2 XP</b> (в 2,5 раза меньше), максимум 2 группы. Упражнение без группы групповой XP не даёт.</div></div>';
  h+='<div class="card"><h3>'+I('list')+'Из чего сложился общий XP</h3><div class="lv-break"><div><b>'+P.breakdown.bonus+'</b><span>за тренировки</span></div><div><b>'+P.breakdown.sets+'</b><span>за подходы</span></div><div><b style="color:var(--gold)">'+P.stats.recs+'</b><span>рекордов 1ПМ</span></div></div><div class="lv-note">Тренировка: 1–2 упражнения — <b>20 XP</b>, 3 и больше — <b>50 XP + 5</b> за каждое после третьего.<br>Подход (вес &gt; 0, повторы &gt; 0): рабочий — <b>2 XP</b>, лёгкий (ниже 90% рекорда 1ПМ) — <b>1 XP</b>, новый рекорд — <b>3 XP</b>.<br>Рекорд для XP считается по формуле 1ПМ: вес × (1 + повторы / 30). На записи и рекорды в «Дневнике» это не влияет.</div></div>';
  const ev=P.history.filter(x=>VIEW.hist==='all'||x.kind===VIEW.hist),show=VIEW.hall?ev:ev.slice(0,8);
