@@ -378,14 +378,9 @@ html.noanim .lv-up,html.noanim .lv-fill.lv-up::after{animation:none}
 .az{position:absolute;border:0;background:transparent;border-radius:40%;padding:0;cursor:pointer}
 .az.t{background:rgba(255,90,78,.55);box-shadow:0 0 0 2px #ff5a4e,0 0 14px rgba(255,90,78,.5)}
 .az.s{background:rgba(78,157,255,.5);box-shadow:0 0 0 2px #4e9dff,0 0 12px rgba(78,157,255,.45)}
-.anatside2{display:flex;gap:8px;margin-top:8px}
-.anatmini{flex:1;border:1px solid var(--ln);border-radius:10px;background:var(--bg2);padding:5px;cursor:pointer;text-align:center}
-.anatmini.on{border-color:var(--ac)}
-.anatmini span{font-size:11px;color:var(--t2)}
-.thwin{overflow:hidden;height:86px;border-radius:6px;background:#3e3e3e;position:relative}
-.thwin img{height:100%;width:200%;max-width:none;display:block;image-rendering:pixelated}
+.anatseg{margin:8px 0 2px}
 .anatgrp{display:flex;align-items:center;gap:8px;margin:10px 0 6px}
-.picon{display:inline-block;border-radius:2px;background-color:#3e3e3e;image-rendering:pixelated;flex:0 0 auto}
+.picon{display:inline-block;border-radius:4px;background-color:transparent;image-rendering:pixelated;flex:0 0 auto}
 .anatleg{display:flex;gap:10px;font-size:11.5px;color:var(--t2);margin-top:6px}
 .anatleg i{width:9px;height:9px;border-radius:3px;display:inline-block;margin-right:4px;vertical-align:-1px}
 .anatlist{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
@@ -414,7 +409,6 @@ html.anatcal .az{outline:1px dashed #fff;background:rgba(255,255,255,.12)}
 .pcount button{width:40px;height:40px;border-radius:12px;border:1px solid var(--ln);background:var(--bg2);color:var(--tx);font-size:20px}
 /* motion: everything new only when allowed */
 @media (prefers-reduced-motion: no-preference){
-  html:not(.noanim) .anatimg{transition:transform .35s var(--e,ease)}
   html:not(.noanim) .az{transition:background .25s,box-shadow .25s}
   html:not(.noanim) .foldrest{transition:filter .25s,opacity .25s}
   html:not(.noanim) .ctip{transition:left .08s linear}
@@ -814,7 +808,7 @@ function musclePixel(g,size){
   return '<svg class="mpx" width="'+size+'" height="'+size+'" viewBox="-1 -1 26 26" shape-rendering="crispEdges" aria-hidden="true">'+out+'</svg>';
 }
 function gdot(g){return '<i class="gdot" style="background:'+(GDOT[g]||'#8a93a6')+'"></i>';}
-function muscleBadge(g,size){return '<span class="mbadge">'+musclePixel(g,size||24)+gdot(g)+'</span>';}
+function muscleBadge(g,size){return '<span class="mbadge">'+pieceIcon(g,size||24)+gdot(g)+'</span>';}
 function badge(g,c){return muscleBadge(g,24)}
 /* ===== AVATAR 32x32 ===== */
 var AV_SKIN=['#f2c9a0','#d9a066','#b97a4b','#8a5a33','#5c3a22','#a8dfd0'];
@@ -1327,9 +1321,13 @@ var AZ_CENT={m:{f:0.26,b:0.73},f:{f:0.26,b:0.73}};
 /* кусочки мышц: [x%,y%,w%,h%] на фото-кусочках */
 var AP_PIECE={'Грудь':[4,4,46,32],'Руки':[58,2,34,44],'Ноги':[4,46,26,50],'Спина':[32,48,38,48],'Пресс':[70,52,26,40],'Плечи':[4,4,14,16]};
 
+/* кликабельны только крупные мышцы; мелкие — из списка ниже */
+var AZ_BIG={pec:1,deltF:1,deltR:1,bic:1,tri:1,flx:1,ext:1,abs:1,trap:1,lat:1,quad:1,glut:1,ham:1,gas:1};
 function anatZones(sex,selT,selS){
   var T=sex==='f'?AZ_F:AZ_M,h='',v,i,z,id,cls;
   for(v in T){for(i=0;i<T[v].length;i++){z=T[v][i];id=z[0];
+    if(id==='brd')id='flx';
+    if(!AZ_BIG[id])continue;
     cls='az'+(selT.indexOf(id)>=0?' t':selS.indexOf(id)>=0?' s':'');
     h+='<button class="'+cls+'" data-act="anatm" data-id="'+id+'" style="left:'+z[1]+'%;top:'+z[2]+'%;width:'+z[3]+'%;height:'+z[4]+'%" aria-label="'+id+'"></button>';}}
   return h;
@@ -1361,35 +1359,59 @@ function anatFit(){
   }
   if(img.complete)go();else img.onload=go;
 }
-function anatThumb(sex,view){
-  var src=sex==='f'?ANAT_IMG_F:ANAT_IMG_M;
-  var on=U.anat.view===view;
-  return '<div class="anatmini'+(on?' on':'')+'" data-act="anatv" data-v="'+view+'">'+
-    '<div class="thwin"><img src="'+src+'" style="transform:translateX('+(view==='f'?'0':'-50')+'%)" alt=""></div>'+
-    '<span>'+(view==='f'?'Спереди':'Сзади')+'</span></div>';
-}
 var GI_MAP={'Грудь':GI_CHEST,'Спина':GI_SPINE,'Ноги':GI_LEGS,'Плечи':GI_DELT,'Руки':GI_ARMS,'Пресс':GI_ABS};
 function pieceIcon(g,size){
   var src=GI_MAP[g]||GI_CHEST;
   return '<span class="picon" style="width:'+size+'px;height:'+size+'px;background-image:url(\''+src+'\');background-size:contain;background-position:center;background-repeat:no-repeat"></span>';
 }
-function anatBlock(){
-  var a=U.anat, sex=S.cfg.sex==='f'?'f':'m';
-  var h=anatPhoto(sex,a.t,a.s);
-  h+='<div class="anatside2">'+anatThumb(sex,'f')+anatThumb(sex,'b')+'</div>';
-  h+='<div class="anatleg"><span><i style="background:#ff5a4e"></i>Целевая</span><span><i style="background:#4e9dff"></i>Синергист</span></div>';
-  var grp=a.grp||'Грудь',list=[],i,m;
+function anatListHtml(){
+  var a=U.anat,grp=a.grp||'Грудь',list=[],i,m,h='';
   for(i=0;i<ANAT.length;i++){m=ANAT[i];if(m.g===grp)list.push(m);}
   list.sort(function(x,y){return y.sz-x.sz;});
   var show=a.more?list:list.slice(0,4);
-  h+='<div class="anatgrp">'+pieceIcon(grp,34)+'<select class="anatsel" data-ac="anatg">';
-  var GS=['Грудь','Спина','Ноги','Плечи','Руки','Пресс'],gi;
-  for(gi=0;gi<GS.length;gi++)h+='<option'+(GS[gi]===grp?' selected':'')+'>'+GS[gi]+'</option>';
-  h+='</select></div><div class="anatlist">';
   for(i=0;i<show.length;i++){m=show[i];
     h+='<button class="anatbtn'+(a.t.indexOf(m.id)>=0?' t':a.s.indexOf(m.id)>=0?' s':'')+'" data-act="anatm" data-id="'+m.id+'">'+m.n+'</button>';}
   if(!a.more&&list.length>4)h+='<button class="anatbtn" data-act="anatmore">Ещё ('+(list.length-4)+')</button>';
-  return h+'</div>';
+  return h;
+}
+function anatGrpHtml(){
+  var grp=U.anat.grp||'Грудь',GS=['Грудь','Спина','Ноги','Плечи','Руки','Пресс'],gi;
+  var h='<div class="anatgrp">'+pieceIcon(grp,34)+'<select class="anatsel" data-ac="anatg">';
+  for(gi=0;gi<GS.length;gi++)h+='<option'+(GS[gi]===grp?' selected':'')+'>'+GS[gi]+'</option>';
+  return h+'</select></div>';
+}
+function anatViewHtml(){
+  var a=U.anat;
+  return '<div class="seg anatseg">'+
+    '<button class="segbtn'+(a.view==='b'?'':' on')+'" data-act="anatv" data-v="f">Спереди</button>'+
+    '<button class="segbtn'+(a.view==='b'?' on':'')+'" data-act="anatv" data-v="b">Сзади</button></div>';
+}
+function anatBlock(){
+  var a=U.anat,sex=S.cfg.sex==='f'?'f':'m';
+  var h=anatPhoto(sex,a.t,a.s);
+  h+=anatViewHtml();
+  h+='<div class="anatleg"><span><i style="background:#ff5a4e"></i>Целевая</span><span><i style="background:#4e9dff"></i>Синергист</span></div>';
+  h+='<div id="anatgrpwrap">'+anatGrpHtml()+'<div class="anatlist" id="anatlist">'+anatListHtml()+'</div></div>';
+  return h;
+}
+/* перекраска без пересоздания фото: тап не дёргает картинку */
+function anatMark(){
+  var z=document.querySelectorAll('#anatwrap .az'),i,id;
+  for(i=0;i<z.length;i++){id=z[i].getAttribute('data-id');
+    z[i].className='az'+(U.anat.t.indexOf(id)>=0?' t':U.anat.s.indexOf(id)>=0?' s':'');}
+  var b=document.querySelectorAll('#anatwrap .anatbtn'),j;
+  for(j=0;j<b.length;j++){id=b[j].getAttribute('data-id');if(!id)continue;
+    b[j].className='anatbtn'+(U.anat.t.indexOf(id)>=0?' t':U.anat.s.indexOf(id)>=0?' s':'');}
+}
+function anatSegMark(){
+  var b=document.querySelectorAll('#anatwrap .anatseg .segbtn'),i;
+  for(i=0;i<b.length;i++){
+    if(b[i].getAttribute('data-v')===U.anat.view)b[i].classList.add('on');
+    else b[i].classList.remove('on');}
+}
+function anatGrpRefresh(){
+  var w=document.getElementById('anatgrpwrap');
+  if(w)w.innerHTML=anatGrpHtml()+'<div class="anatlist" id="anatlist">'+anatListHtml()+'</div>';
 }
 function anatRepaint(){
   var w=document.getElementById('anatwrap');
@@ -1697,14 +1719,16 @@ tp:()=>timerPlus(15),ts:()=>timerStop(true),tset:e=>timerStart(+e.dataset.v,''),
 fold:e=>{const k=e.dataset.k;U.fold=U.fold||{};U.fold[k]=!U.fold[k];rr()},
 rng:e=>{const kind=e.dataset.kind,v=e.dataset.v;U.ranges=U.ranges||rangesLoad();U.ranges[kind]=v;rangesSave();rr()},
 sex:e=>{const v=e.dataset.v;S.cfg.sex=(v==='m'||v==='f')?v:'';plan(300);rr()},
-anatv:e=>{if(!U.anat)anatInit('','');U.anat.view=e.dataset.v;U.anat.manual=1;anatRepaint()},
-anatmore:()=>{if(!U.anat)anatInit('','');U.anat.more=1;anatRepaint()},
+anatv:e=>{if(!U.anat)anatInit('','');U.anat.view=e.dataset.v;U.anat.manual=1;anatSegMark();anatFit()},
+anatmore:()=>{if(!U.anat)anatInit('','');U.anat.more=1;const l=document.getElementById('anatlist');if(l)l.innerHTML=anatListHtml()},
 anatm:e=>{if(!U.anat)anatInit('','');const id=e.dataset.id,m=anatById(id);if(!m)return;
- const a=U.anat,it=a.t.indexOf(id),is=a.s.indexOf(id);
+ const a=U.anat,it=a.t.indexOf(id),is=a.s.indexOf(id);let flip=0;
  if(it>=0){a.t.splice(it,1);a.s.push(id)}
  else if(is>=0){a.s.splice(is,1)}
- else{a.t.push(id);if(!a.manual&&m.v!==a.view)a.view=m.v}
- anatSyncFields();anatRepaint();
+ else{a.t.push(id);if(!a.manual&&m.v!==a.view){a.view=m.v;flip=1}}
+ anatSyncFields();
+ if(flip){anatSegMark();anatFit()}
+ anatMark();
  var ft=$('#anT'),fs=$('#anS');
  if(ft&&ft.oninput)ft.oninput();
  if(fs&&fs.oninput)fs.oninput()},
@@ -1824,7 +1848,7 @@ document.addEventListener('input',e=>{const t=e.target;
  if(t.id==='ca'){S.cfg.a=t.value;theme(true);return}
  if(t.id==='ci'){S.cfg.i=t.value;theme(true);return}});
 document.addEventListener('change',e=>{const t=e.target;
- if(t.classList&&t.classList.contains('anatsel')){if(!U.anat)anatInit('','');U.anat.grp=t.value;U.anat.more=0;anatRepaint();return}
+ if(t.classList&&t.classList.contains('anatsel')){if(!U.anat)anatInit('','');U.anat.grp=t.value;U.anat.more=0;anatGrpRefresh();return}
  if(t.id==='rd'){S.cfg.rest=+t.value;plan(200);toast('ok','timer','Отдых по умолчанию: '+t.value+' с');return}
  if(t.id==='lsort'){S.cfg.ls=t.value;plan(200);rr();return}
  if(t.id==='ret'){S.cfg.ret=t.value==='never'?'never':+t.value;const n=purge();plan(200);rr();
